@@ -1,43 +1,22 @@
 package br.ufrj.ad.controller;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
 public class BinaryBackoff
 {
-  private static final int TEMPO_SLOT = 51200; // em nanosegundos
+  private static final int SLOT_TEMPO = 51200; // em nanosegundos
   private static final int COLISOES_MAXIMO = 10;
   private static final int COLISOES_DESCARTE = 16;
   
-  private int colisoes;
-  
-  public boolean descartaPacote()
+  // Em nanosegundos
+  public static double geraAtraso(int numeroColisoes)
   {
-    if(colisoes > COLISOES_DESCARTE)
-        return true;
-    return false;    
+    if (numeroColisoes > COLISOES_DESCARTE)
+    {
+      return -1;
+    } else {
+      int k = Math.min(numeroColisoes, COLISOES_MAXIMO);
+      return (int) (Math.random() * (Math.pow(2, k))) * (SLOT_TEMPO); 
+      // O fato de truncarmos para inteiro elimina a necessidade de subtrairmos 1 do resultado
+    }
   }
-
-  private int minimoColisoes()
-  {
-    return Math.min(colisoes, COLISOES_MAXIMO);
-  }
-  
-  public int geraAtraso()
-  {
-    return (int)(Math.random()* minimoColisoes());
-  }
-  
-  public int getColisoes()
-  {
-    return colisoes;
-  }
-
-  public void setColisoes(int colisoes)
-  {
-    this.colisoes = colisoes;
-  }
-
-  
-  
 
 }
