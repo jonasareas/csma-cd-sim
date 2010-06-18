@@ -3,7 +3,7 @@ package br.ufrj.ad.controller;
 import java.util.LinkedList;
 import java.util.List;
 
-import br.ufrj.ad.model.Computador;
+import br.ufrj.ad.model.Estacao;
 import br.ufrj.ad.model.Evento;
 
 public class Simulador
@@ -17,10 +17,10 @@ public class Simulador
   
   public void iniciaSimulacao() 
   {
-    Computador pc1 = new Computador(1, 100);
-    Computador pc2 = new Computador(2, 80);
-    Computador pc3 = new Computador(3, 60);
-    Computador pc4 = new Computador(4, 40);
+    Estacao pc1 = new Estacao(1, 100);
+    Estacao pc2 = new Estacao(2, 80);
+    Estacao pc3 = new Estacao(3, 60);
+    Estacao pc4 = new Estacao(4, 40);
     
     listaEventos = new LinkedList<Evento>();
     
