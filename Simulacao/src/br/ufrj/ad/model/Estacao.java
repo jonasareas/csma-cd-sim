@@ -1,6 +1,6 @@
 package br.ufrj.ad.model;
 
-public class Computador
+public class Estacao
 {
 
   private int codigo;
@@ -11,7 +11,7 @@ public class Computador
   
   private boolean meioOcupado;
   
-  public Computador(int codigo, int distancia)
+  public Estacao(int codigo, int distancia)
   {
     this.codigo = codigo;
     this.distancia = distancia;
