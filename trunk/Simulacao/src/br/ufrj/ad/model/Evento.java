@@ -1,39 +1,62 @@
 package br.ufrj.ad.model;
 
-import java.util.Arrays;
-import java.util.List;
+import br.ufrj.ad.controller.Simulador.TipoEvento;
 
-public class Evento
+
+public class Evento implements Comparable<Evento>
 {
-
-  private double entradaNaLista;
+  private double tempoExecucao;
   
-  private double saidaDaLista;
+  private TipoEvento tipoEvento;
   
-  public static final List<String> TIPOS_EVENTO = Arrays.asList(" /* TODO */ ");
+  private int codigoEstacao;
   
-  public double duracao() {
-    return saidaDaLista - entradaNaLista;
+  public Evento(TipoEvento tipoEvento, double tempoExecucao, int codigoEstacao) {
+    this.tempoExecucao = tempoExecucao;
+    this.tipoEvento = tipoEvento;
+    this.codigoEstacao = codigoEstacao;
+  }
+  
+  public double getTempoExecucao()
+  {
+    return tempoExecucao;
   }
 
-  public double getEntradaNaLista()
+  public void setTempoExecucao(double tempoExecucao)
   {
-    return entradaNaLista;
+    this.tempoExecucao = tempoExecucao;
   }
 
-  public void setEntradaNaLista(double entradaNaLista)
+  public TipoEvento getTipoEvento()
   {
-    this.entradaNaLista = entradaNaLista;
+    return tipoEvento;
   }
 
-  public double getSaidaDaLista()
+  public void setTipoEvento(TipoEvento tipoEvento)
   {
-    return saidaDaLista;
+    this.tipoEvento = tipoEvento;
+  }
+  
+  public int getCodigoEstacao()
+  {
+    return codigoEstacao;
   }
 
-  public void setSaidaDaLista(double saidaDaLista)
+  public void setCodigoEstacao(int codigoEstacao)
   {
-    this.saidaDaLista = saidaDaLista;
+    this.codigoEstacao = codigoEstacao;
   }
+
+  @Override
+  public int compareTo(Evento e)
+  {
+    if (this.tempoExecucao < e.getTempoExecucao())
+      return -1;
+    else if (this.tempoExecucao > e.getTempoExecucao())
+      return 1;
+    return 0;
+  }
+  
+  
   
 }

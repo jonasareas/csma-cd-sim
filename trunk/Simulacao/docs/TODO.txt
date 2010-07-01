@@ -1,0 +1,86 @@
+1 - A pmf do número de quadros N em cada mensagem pode ser escolhida como geométrica ou determinística.
+	Se 0 < p < 1, a distribuição é geométrica, com P(N=k) = (1-p) p, k > 0, e média 1/p. Se p ≥ 1, o o # de quadros em cada mensagem é fixo e igual a p.
+
+2 - A taxa de chegada de mensagens em cada estação poderá ser determinística (D) ou exponencial (E).
+	O intervalo médio entre chegadas, definido em segundos, será Ai para a estação PCi.
+	No caso de estações operarem de forma determinística, vamos assumir uma sincronização inicial de tempo entre elas. Assim, se for dado Ai=Aj=A, 		determinístico para ambas as estações, isto significará que ambos os PCs receberão mensagens simultaneamente, a cada A segundos.
+	Se a taxa de chegada na estação PCi for exponencial com intervalo médio Ai entre chegadas, então a taxa da exponencial será 1/Ai.
+
+
+Envio de Mensagem:
+SenteMeio()
+Se Livre
+	MeioLivre()
+Senão
+	ContinuaSentindoAteMeioLivre()
+	MeioLivre()
+
+MeioLivre():
+	VerificaTempoEntreTransmissoes()
+	Se Passou
+		IniciaEnvio()
+		Colisao()
+	Senão
+		Wait()
+		IniciaEnvio()
+		Colisao()
+
+Colisao():
+Se durante a transmissão do quadro ocorre colisão, a estação aborta a transmissão em andamento, transmite um sinal de reforço de colisão por 3,2 μs (equivalente a tx de 32 bits) e, após este atraso, escolhe um instante aleatório para retransmissão, segundo o algoritmo Binary Backoff e repete o processo.
+
+
+
+Se uma estação for a única a transmitir na rede, seus quadros são necessariamente transmitidos com um intervalo de 9,6 μs entre eles.
+
+O reforço de colisão pode ser visto como uma extensão do tempo de transmissão do quadro abortado. O final da última transmissão, então, poderá ser entendido como o final de transmissão de um quadro abortado ou o final de uma transmissão com sucesso.
+
+Uma estação só processa um quadro por vez. Um quadro é transmitido com sucesso quando não há deteção de colisão durante sua transmissão.
+
+
+
+VER ITEM 3
+
+
+
+Cenário 1: (p e A determinísticos)
+	Estação 1 e estação 2 transmitem mensagens de 40 quadros de 1000 bytes, totalizando 4 Mbps por estação, sincronizadas.
+	Parâmetros: A1 = A2 = 80 ms, ambos determinísticos; p1 = p2 = 40; estações 3 e 4 sem tráfego.
+
+Cenário 2: (A exponencial, p determístico)
+	Estação 1 e estação 2 transmitem mensagens de 40 quadros de 1000 bytes, totalizando 4 Mbps por estação, chegada de mensagens Poisson.
+	Parâmetros: A1 = A2 = 80 ms exponencial; p1 = p2 = 40; estações 3 e 4 sem tráfego.
+
+Cenário 3: (p e A determinísticos)
+	Estação 1 injetando tráfego determinístico (mensagens de 40 quadros) e estações 2, 3 e 4 gerando tráfego de mensagens com um único quadro na taxa de 0,5 Mbps por estação também determinístico – todas sincronizadas na geração)
+	Parâmetros: A1 = 80 ms, determinístico; p1 = 40; A2=A3=A4 =16 ms, todos determinísticos; p2 = p3 = p4 = 1.
+
+Cenário 4: (p deterministico, A1 determinístico e A234 exponencial)
+	Estação 1 injetando tráfego determinístico (mensagens de 40 quadros) e estações 2, 3 e 4 gerando tráfego de mensagens com um único quadro na taxa de 0,5 Mbps Poisson por estação.
+	Parâmetros: A1 = 80 ms, determinístico; p1 = 40; A2=A3=A4 =16 ms, todos exponenciais; p2 = p3 = p4 = 1.
+
+> PARAMETROS: PCi -> Pi e Ai (D ou E)
+- Quem envia
+- Quantos quadros (1)
+- Tempo entre chegadas no PC? (2)
+
+TELA:
+- Cenário 1 ...
+- Cenário 2 ...
+- Cenário 3 ...
+- Cenário 4 ...
+
+- Outro cenário ...
+- Botão Simular
+
+VER ITEM 5
+
+
+         
+         int numeroQuadros;
+         if (e.getP() < 1)
+           numeroQuadros = Geometrica.geraAmostra(e.getP());
+         else
+           numeroQuadros = (int) e.getP();
+         e.getListaMensagens().add(new Mensagem(numeroQuadros));    
+       }
+
