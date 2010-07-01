@@ -7,6 +7,11 @@ public class Mensagem
   
   private int tamanho;
   
+  public Mensagem(int tamanho) 
+  {
+    this.tamanho = tamanho;
+  }
+  
   public int quantidadeQuadros() 
   {
     if (tamanho % TAMANHO_QUADRO != 0)
