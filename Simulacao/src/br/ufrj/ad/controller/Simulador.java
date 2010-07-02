@@ -84,11 +84,11 @@ public class Simulador
   {
     switch(evento.getTipoEvento()) {
       case ChegadaNaFila :
-    	System.out.println(evento.getTempoExecucao() + ": Chegada na Fila de " + evento.getCodigoEstacao());  
+    	//System.out.println(evento.getTempoExecucao() + ": Chegada na Fila de " + evento.getCodigoEstacao());  
         processaChegadaNaFila(evento);
         break;
       case TentativaEnvio :
-    	  System.out.println(evento.getTempoExecucao() + ": Tentativa de Envio de " + evento.getCodigoEstacao());
+    	  //System.out.println(evento.getTempoExecucao() + ": Tentativa de Envio de " + evento.getCodigoEstacao());
     	processaTentativaEnvio(evento);
     	break;
       case FimTransmissao :
@@ -96,19 +96,19 @@ public class Simulador
     	processaFimTransmissao(evento);
     	break;
       case FimEspera :
-    	  System.out.println(evento.getTempoExecucao() + ": Fim de espera de " + evento.getCodigoEstacao());
+    	  //System.out.println(evento.getTempoExecucao() + ": Fim de espera de " + evento.getCodigoEstacao());
     	processaFimEspera(evento);
     	break;
       case MeioLivre :
-    	  System.out.println(evento.getTempoExecucao() + ": Meio Livre em " + evento.getCodigoEstacao());
+    	  //System.out.println(evento.getTempoExecucao() + ": Meio Livre em " + evento.getCodigoEstacao());
     	processaMeioLivre(evento);
     	break;
       case MeioOcupado :
-    	  System.out.println(evento.getTempoExecucao() + ": Meio ocupado em " + evento.getCodigoEstacao());
+    	  //System.out.println(evento.getTempoExecucao() + ": Meio ocupado em " + evento.getCodigoEstacao());
     	processaMeioOcupado(evento);
     	break;
       case FimReforco :
-    	System.out.println(evento.getTempoExecucao() + ": Fim de reforco de " + evento.getCodigoEstacao());
+    	//System.out.println(evento.getTempoExecucao() + ": Fim de reforco de " + evento.getCodigoEstacao());
     	processaFimReforco(evento);
     	break;
         
@@ -288,7 +288,7 @@ public class Simulador
 	  
 	  estacao.setMeioEmColisao(true);
 	  
-	  Evento fimReforco = new Evento(TipoEvento.FimTransmissao, evento.getTempoExecucao() + TEMPO_REFORCO_COLISAO, estacao.getCodigo());
+	  Evento fimReforco = new Evento(TipoEvento.FimReforco, evento.getTempoExecucao() + TEMPO_REFORCO_COLISAO, estacao.getCodigo());
 	  listaEventos.add(fimReforco);
 	  
   }
