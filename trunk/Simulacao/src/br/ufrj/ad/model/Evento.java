@@ -50,22 +50,30 @@ public class Evento implements Comparable<Evento>
   @Override
   public int compareTo(Evento e)
   {
-    if (this.tempoExecucao < e.getTempoExecucao())
+	if (this.tempoExecucao < e.getTempoExecucao())
       return -1;
     else if (this.tempoExecucao > e.getTempoExecucao())
       return 1;
     return 0;
   }
   
-  
-  public boolean equals(Evento e)
+  @Override public boolean equals(Object obj)
   {
-	  if(this.tipoEvento == e.getTipoEvento() && this.codigoEstacao == e.getCodigoEstacao())
-		  return true;
-	  else
+	  if(obj == null)
 		  return false;
-  }
-  
-  
-  
+	  
+	  if (this == obj)
+		  return true;
+	  
+	  if ( !(obj instanceof Evento) ) 
+		  return false;
+	  
+	  Evento e = (Evento)obj;
+	  
+	  if(this.codigoEstacao == e.getCodigoEstacao() && this.tipoEvento == e.getTipoEvento())
+		  return true;
+	  
+	  return false;
+	  
+  }  
 }
