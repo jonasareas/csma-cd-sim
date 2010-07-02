@@ -58,5 +58,14 @@ public class Evento implements Comparable<Evento>
   }
   
   
+  public boolean equals(Evento e)
+  {
+	  if(this.tipoEvento == e.getTipoEvento() && this.codigoEstacao == e.getCodigoEstacao())
+		  return true;
+	  else
+		  return false;
+  }
+  
+  
   
 }

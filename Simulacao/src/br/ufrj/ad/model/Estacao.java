@@ -1,20 +1,25 @@
 package br.ufrj.ad.model;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class Estacao
 {
 
   private int codigo;
   
-  private int distancia;
+  private double distancia;
   
   private boolean meioEmColisao;
   
-  private boolean meioOcupado;
+  private int meioOcupado; // indica quantos pcs estao ocupando o meio
   
-  private List<Mensagem> listaMensagens;
+  private boolean esperandoTempoSeguranca;
+  
+  private boolean transmitindo;
+  
+  private boolean forcar;
+  
+  private LinkedList<Mensagem> listaMensagens;
   
   // Parâmetros da simulação
   
@@ -24,7 +29,9 @@ public class Estacao
 
   private boolean deterministico;
   
-  public Estacao(int codigo, int distancia, double p, double a, boolean ehDeterministico)
+  private int quantidadeColisoes;
+  
+  public Estacao(int codigo, double distancia, double p, double a, boolean ehDeterministico)
   {
     this.codigo = codigo;
     this.distancia = distancia;
@@ -32,6 +39,12 @@ public class Estacao
     this.a = a;
     this.deterministico = ehDeterministico;
     this.listaMensagens = new LinkedList<Mensagem>();
+    this.meioEmColisao = false;
+    this.meioOcupado = 0;
+    this.esperandoTempoSeguranca = false;
+    this.transmitindo = false;
+    this.forcar = false;
+    this.quantidadeColisoes = 0;
   }
   
   public boolean enviaMensagem(Mensagem mensagem) {
@@ -49,7 +62,7 @@ public class Estacao
     this.codigo = codigo;
   }
 
-  public int getDistancia()
+  public double getDistancia()
   {
     return distancia;
   }
@@ -69,12 +82,12 @@ public class Estacao
     this.meioEmColisao = meioEmColisao;
   }
 
-  public boolean isMeioOcupado()
+  public int getMeioOcupado()
   {
     return meioOcupado;
   }
 
-  public void setMeioOcupado(boolean meioOcupado)
+  public void setMeioOcupado(int meioOcupado)
   {
     this.meioOcupado = meioOcupado;
   }
@@ -109,16 +122,88 @@ public class Estacao
     this.deterministico = deterministico;
   }
 
-  public List<Mensagem> getListaMensagens()
+  public LinkedList<Mensagem> getListaMensagens()
   {
     return listaMensagens;
   }
 
-  public void setListaMensagens(List<Mensagem> listaMensagens)
+  public void setListaMensagens(LinkedList<Mensagem> listaMensagens)
   {
-    this.listaMensagens = listaMensagens;
+    this.listaMensagens = new LinkedList<Mensagem>(listaMensagens);
   }
   
+  public void addMensagem(Mensagem mem)
+  {
+	  listaMensagens.addLast(mem);
+  }
   
+  public boolean isFilaVazia()
+  {
+	return listaMensagens.isEmpty();  
+  }
+
+  public void setEsperandoTempoSeguranca(boolean esperandoTempoSeguranca) {
+	this.esperandoTempoSeguranca = esperandoTempoSeguranca;
+  }
+
+  public boolean isEsperandoTempoSeguranca() {
+	return esperandoTempoSeguranca;
+  }
+
+	public void setTransmitindo(boolean transmitindo) {
+		this.transmitindo = transmitindo;
+	}
+	
+	public boolean isTransmitindo() {
+		return transmitindo;
+	}
+	
+	public void setForcar(boolean forcar) {
+		this.forcar = forcar;
+	}
+	
+	public boolean isForcar() {
+		return forcar;
+	} 
+	public void pacoteEnviado()
+	{
+		Mensagem msg = listaMensagens.getFirst();
+		
+		if(msg.getQuantidadeQuadros() <= 1)
+		{
+			listaMensagens.removeFirst();
+		}else
+		{
+			msg.setQuantidadeQuadros(msg.getQuantidadeQuadros() -1);
+		}
+		
+		quantidadeColisoes = 0;
+	}
+	
+	public int getTamanhoQuadro()
+	{
+		return Mensagem.TAMANHO_QUADRO;
+	}
+
+	public void setQuantidadeColisoes(int quantidadeColisoes) {
+		this.quantidadeColisoes = quantidadeColisoes;
+	}
+
+	public int getQuantidadeColisoes() {
+		return quantidadeColisoes;
+	}
+	
+	public void descartaPacote()
+	{
+		Mensagem msg = listaMensagens.getFirst();
+		
+		if(msg.getQuantidadeQuadros() <= 1)
+		{
+			listaMensagens.removeFirst();
+		}else
+		{
+			msg.setQuantidadeQuadros(msg.getQuantidadeQuadros() -1);
+		}
+	}
   
 }
