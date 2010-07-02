@@ -3,15 +3,16 @@ package br.ufrj.ad.model;
 public class Mensagem
 {
 
-  private static final int TAMANHO_QUADRO = 1000; // Em bytes
+  public static final int TAMANHO_QUADRO = 1000; // Em bytes
   
-  private int tamanho;
+  //private int tamanho;
+  private int quantidadeQuadros;
   
   public Mensagem(int tamanho) 
   {
-    this.tamanho = tamanho;
+    this.quantidadeQuadros = tamanho;
   }
-  
+ /* 
   public int quantidadeQuadros() 
   {
     if (tamanho % TAMANHO_QUADRO != 0)
@@ -30,5 +31,14 @@ public class Mensagem
   {
     this.tamanho = tamanho;
   }
+  */
+
+public void setQuantidadeQuadros(int quantidadeQuadros) {
+	this.quantidadeQuadros = quantidadeQuadros;
+}
+
+public int getQuantidadeQuadros() {
+	return quantidadeQuadros;
+}
   
 }

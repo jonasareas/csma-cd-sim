@@ -1,4 +1,5 @@
-package br.ufrj.ad.controller;
+package br.ufrj.ad.util;
+
 
 public class BinaryBackoff
 {
@@ -14,7 +15,7 @@ public class BinaryBackoff
       return -1;
     } else {
       int k = Math.min(numeroColisoes, COLISOES_MAXIMO);
-      return (int) (Math.random() * (Math.pow(2, k))) * (SLOT_TEMPO); 
+      return (int) (MyRandom.next() * (Math.pow(2, k))) * (SLOT_TEMPO); 
       // O fato de truncarmos para inteiro elimina a necessidade de subtrairmos 1 do resultado
     }
   }

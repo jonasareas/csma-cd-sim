@@ -1,18 +1,29 @@
 package br.ufrj.ad.controller;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import br.ufrj.ad.model.Estacao;
+import br.ufrj.ad.model.ConfiguracaoPc;
+import br.ufrj.ad.util.MyRandom;
 
 public class Start
 {
-
   public static void main(String[] args)
   {
+	 MyRandom.getMyRandom(0);
+	  
     Simulador simulador = new Simulador();
     
-    simulador.iniciaSimulacao(10000000); // 10 segundos em microsegundos. Este parâmetro também virá da tela!    
+    ArrayList<ConfiguracaoPc> parametros = new ArrayList<ConfiguracaoPc>();
+    ConfiguracaoPc config1 = new ConfiguracaoPc(1, 100, 40, 80, true);
+	ConfiguracaoPc config2 = new ConfiguracaoPc(2, 80, 40, 80, true);
+	ConfiguracaoPc config3 = new ConfiguracaoPc(3, 60, 0, 0, true);
+	ConfiguracaoPc config4 = new ConfiguracaoPc(4, 40, 0, 0, true);
+	
+	parametros.add(config1);
+	parametros.add(config2);
+	parametros.add(config3);
+	parametros.add(config4);
+	
+	simulador.iniciaSimulacao(10000000, parametros); // 10 segundos em microsegundos. Este parâmetro também virá da tela!
   }
 
 }
