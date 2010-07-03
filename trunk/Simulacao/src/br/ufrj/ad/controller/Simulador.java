@@ -21,7 +21,8 @@ public class Simulador
 		    MeioOcupado,
 		    MeioLivre,
 		    FimEspera,
-		    FimReforco
+		    FimReforco,
+		    FimBackOff
 	}
   
   private static final double PROPAGACAO_ELETRICA = 0.005; // Em microsegundos/metro
@@ -34,8 +35,7 @@ public class Simulador
   
   public void iniciaSimulacao(double tempoSimulacao, ArrayList<ConfiguracaoPc> parametros) 
   {
-    // Primeiro cenário! Apenas para testes! Os parâmetros 3, 4 e 5 virão da tela! MAS A TELA EH MONTADA NA MAIN (START)!!!!
-	
+    	
 	  Estacao est;
 	  for (ConfiguracaoPc config : parametros)
 	  {
@@ -52,7 +52,7 @@ public class Simulador
     	   programaChegadaNaFila(estacao.getCodigo(), Exponencial.geraAmostra(estacao.getA(), estacao.isDeterministico()));
        }
     }
-    simula(listaPCs, tempoSimulacao);    
+    simula(tempoSimulacao);    
   }
   
   private void programaChegadaNaFila(int codigoEstacao, double tempoExecucao)
@@ -61,13 +61,13 @@ public class Simulador
     listaEventos.add(evento);
   }
   
-  private void simula(List<Estacao> listaPCs, double tempoSimulacao)
+  private void simula(double tempoSimulacao)
   {
     Evento evento;
     do {
       evento = listaEventos.remove();
       verificaTipoEvento(evento);
-    } while(/*evento.getTempoExecucao() < tempoSimulacao*/true);
+    } while(/*evento.getTempoExecucao() < tempoSimulacao*/ !listaEventos.isEmpty());
   }
   
   private Estacao buscaEstacao(int codEstacao)
@@ -84,32 +84,36 @@ public class Simulador
   {
     switch(evento.getTipoEvento()) {
       case ChegadaNaFila :
-    	//System.out.println(evento.getTempoExecucao() + ": Chegada na Fila de " + evento.getCodigoEstacao());  
+    	//System.out.println(Double.toString(evento.getTempoExecucao()) + ": Chegada na Fila de " + evento.getCodigoEstacao());  
         processaChegadaNaFila(evento);
         break;
       case TentativaEnvio :
-    	  //System.out.println(evento.getTempoExecucao() + ": Tentativa de Envio de " + evento.getCodigoEstacao());
+    	System.out.println(Double.toString(evento.getTempoExecucao()) + ": Tentativa de Envio de " + evento.getCodigoEstacao());
     	processaTentativaEnvio(evento);
     	break;
       case FimTransmissao :
-    	  System.out.println(evento.getTempoExecucao() + ": Fim de transmissao de " + evento.getCodigoEstacao());
+    	System.out.println(Double.toString(evento.getTempoExecucao()) + ": Fim de transmissao de " + evento.getCodigoEstacao());
     	processaFimTransmissao(evento);
     	break;
       case FimEspera :
-    	  //System.out.println(evento.getTempoExecucao() + ": Fim de espera de " + evento.getCodigoEstacao());
+    	//System.out.println(Double.toString(evento.getTempoExecucao()) + ": Fim de espera de " + evento.getCodigoEstacao());
     	processaFimEspera(evento);
     	break;
       case MeioLivre :
-    	  //System.out.println(evento.getTempoExecucao() + ": Meio Livre em " + evento.getCodigoEstacao());
+    	//System.out.println(evento.getTempoExecucao() + ": Meio Livre em " + evento.getCodigoEstacao());
     	processaMeioLivre(evento);
     	break;
       case MeioOcupado :
-    	  //System.out.println(evento.getTempoExecucao() + ": Meio ocupado em " + evento.getCodigoEstacao());
+    	//System.out.println(evento.getTempoExecucao() + ": Meio ocupado em " + evento.getCodigoEstacao());
     	processaMeioOcupado(evento);
     	break;
       case FimReforco :
     	//System.out.println(evento.getTempoExecucao() + ": Fim de reforco de " + evento.getCodigoEstacao());
     	processaFimReforco(evento);
+    	break;
+      case FimBackOff :
+    	System.out.println(evento.getTempoExecucao() + ": Fim de backOff de " + evento.getCodigoEstacao());
+    	processaFimBackOff(evento);
     	break;
         
     }
@@ -193,6 +197,7 @@ public class Simulador
 			  }
 				  
 			  estacao.setTransmitindo(true);
+			  estacao.setMeioEmColisao(true);
 			  double tempoDeFim = evento.getTempoExecucao() + TEMPO_REFORCO_COLISAO;
 				  
 			  Evento fimTransmicao = new Evento(TipoEvento.FimReforco, tempoDeFim, estacao.getCodigo());
@@ -246,7 +251,9 @@ public class Simulador
 	  
 	  if(!estacao.isFilaVazia())
 	  {
-		  processaTentativaEnvio(evento);
+		  Evento novaTentativa = new Evento(TipoEvento.TentativaEnvio, evento.getTempoExecucao(), estacao.getCodigo());
+		  listaEventos.add(novaTentativa);
+		  //processaTentativaEnvio(evento);
 	  }
   }
   
@@ -259,14 +266,14 @@ public class Simulador
 	  if(estacao.isTransmitindo())
 		  return;
 	  
-	  if(!estacao.isFilaVazia())
+	  if(estacao.getMeioOcupado() == 0)
 	  {
-		  if(estacao.getMeioOcupado() == 0)
+		  if(estacao.isEsperandoTempoSeguranca())
 		  {
-			  if(estacao.isEsperandoTempoSeguranca())
-			  {
-				  estacao.setForcar(true);
-			  }else
+			  estacao.setForcar(true);
+		  }else
+		  {
+			  if(!estacao.isEsperandoBackoff())
 			  {
 				  Evento fimEspera = new Evento(TipoEvento.FimEspera, evento.getTempoExecucao() + TEMPO_ENTRE_TRANSMISSOES, evento.getCodigoEstacao());
 				  listaEventos.add(fimEspera);
@@ -324,10 +331,22 @@ public class Simulador
 	  {
 		  tempoEspera += evento.getTempoExecucao() + TEMPO_REFORCO_COLISAO;
 		  
-		  Evento novaTentativa = new Evento(TipoEvento.TentativaEnvio, tempoEspera, estacao.getCodigo());
-		  listaEventos.add(novaTentativa);
+		  Evento esperaBackOff = new Evento(TipoEvento.FimBackOff, tempoEspera, estacao.getCodigo());
+		  listaEventos.add(esperaBackOff);
+		  
+		  estacao.setEsperandoBackoff(true);
 	  }
 	  
 	  estacao.setQuantidadeColisoes(estacao.getQuantidadeColisoes() + 1);
+  }
+  
+  private void processaFimBackOff(Evento evento)
+  {
+	  Estacao estacao = buscaEstacao(evento.getCodigoEstacao());
+	  
+	  estacao.setEsperandoBackoff(false);
+	  
+	  Evento novaTentativa = new Evento(TipoEvento.TentativaEnvio, evento.getTempoExecucao(), estacao.getCodigo());
+	  listaEventos.add(novaTentativa);
   }
 }
