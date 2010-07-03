@@ -8,7 +8,7 @@ public class MyRandom {
 	
 	private static MyRandom instancia = null;
 	
-	public static MyRandom getMyRandom(long seed)
+	public static MyRandom setSeed(long seed)
 	{
 		if(instancia == null)
 			instancia = new MyRandom(seed);
@@ -20,7 +20,7 @@ public class MyRandom {
 		gerador = new Random(seed);
 	}
 	
-	public static double next()
+	public static double rand()
 	{
 		return gerador.nextDouble();
 	}

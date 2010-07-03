@@ -2,43 +2,77 @@ package br.ufrj.ad.model;
 
 public class Mensagem
 {
-
   public static final int TAMANHO_QUADRO = 1000; // Em bytes
   
-  //private int tamanho;
   private int quantidadeQuadros;
+  
+  private int totalQuadros;
+  
+  private Quadro quadro = null;
+  
+  private double tempoPrimeiroAcesso;
+  
+  private int totalColisoes;
   
   public Mensagem(int tamanho) 
   {
-    this.quantidadeQuadros = tamanho;
+	  if(tamanho > 0)
+	  {
+		  this.totalQuadros = tamanho;
+		  this.quantidadeQuadros = tamanho - 1;
+		  quadro = new Quadro(TAMANHO_QUADRO);
+	  }
+	  tempoPrimeiroAcesso = 0.0;
+	  totalColisoes = 0;
   }
- /* 
-  public int quantidadeQuadros() 
+  
+  public Quadro getQuadro()
   {
-    if (tamanho % TAMANHO_QUADRO != 0)
-    {
-      return (tamanho / TAMANHO_QUADRO) + 1;
-    }
-    return (tamanho / TAMANHO_QUADRO);
+	  return quadro;
   }
-
-  public int getTamanho()
+  
+  public boolean fimServicoQuadro()
   {
-    return tamanho;
+	if(this.quantidadeQuadros > 0)
+	{
+		this.quantidadeQuadros--;
+		this.totalColisoes += quadro.getColisoes();
+		quadro = new Quadro(TAMANHO_QUADRO);
+		return true;
+	}
+	
+	quadro = null;
+	return false;
+		
   }
-
-  public void setTamanho(int tamanho)
-  {
-    this.tamanho = tamanho;
-  }
-  */
-
-public void setQuantidadeQuadros(int quantidadeQuadros) {
-	this.quantidadeQuadros = quantidadeQuadros;
-}
 
 public int getQuantidadeQuadros() {
 	return quantidadeQuadros;
+}
+
+public void setTempoPrimeiroAcesso(double tempoPrimeiroAcesso) {
+	this.tempoPrimeiroAcesso = tempoPrimeiroAcesso;
+	quadro.setTempoEntradaServidor(tempoPrimeiroAcesso);
+}
+
+public double getTempoPrimeiroAcesso() {
+	return tempoPrimeiroAcesso;
+}
+
+/*
+public int getTotalQuadros() {
+	return totalQuadros;
+}
+
+public int getTotalColisoes() {
+	return totalColisoes;
+}
+*/
+
+// informacao pedida
+public double colisoesPorQuadro()
+{
+	return (double)(totalColisoes)/(double)(totalQuadros);
 }
   
 }

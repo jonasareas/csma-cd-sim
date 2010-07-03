@@ -8,7 +8,7 @@ public class Start
 {
   public static void main(String[] args)
   {
-	 MyRandom.getMyRandom(0);
+	 MyRandom.setSeed(0);
 	  
     Simulador simulador = new Simulador();
     
