@@ -23,7 +23,7 @@ public class Start
 	parametros.add(config3);
 	parametros.add(config4);
 	
-	simulador.iniciaSimulacao(10000000, parametros); // 10 segundos em microsegundos. Este parâmetro também virá da tela!
+	simulador.iniciaSimulacao(60000000, parametros); // 60 segundo em microsegundos. Este parâmetro também virá da tela!
   }
 
 }

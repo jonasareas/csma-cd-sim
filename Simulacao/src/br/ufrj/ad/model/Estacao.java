@@ -15,13 +15,13 @@ public class Estacao
   
   private boolean esperandoTempoSeguranca;
   
+  private boolean esperandoBackoff;
+  
   private boolean transmitindo;
   
   private boolean forcar;
   
   private LinkedList<Mensagem> listaMensagens;
-  
-  // Parâmetros da simulação
   
   private double p;
 
@@ -45,6 +45,7 @@ public class Estacao
     this.transmitindo = false;
     this.forcar = false;
     this.quantidadeColisoes = 0;
+    this.esperandoBackoff = false;
   }
   
   public boolean enviaMensagem(Mensagem mensagem) {
@@ -204,6 +205,16 @@ public class Estacao
 		{
 			msg.setQuantidadeQuadros(msg.getQuantidadeQuadros() -1);
 		}
+		
+		quantidadeColisoes = 0;
+	}
+
+	public void setEsperandoBackoff(boolean esperandoBackoff) {
+		this.esperandoBackoff = esperandoBackoff;
+	}
+
+	public boolean isEsperandoBackoff() {
+		return esperandoBackoff;
 	}
   
 }
