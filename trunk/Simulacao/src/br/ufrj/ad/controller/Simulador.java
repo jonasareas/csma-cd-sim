@@ -10,6 +10,7 @@ import br.ufrj.ad.model.ConfiguracaoPc;
 import br.ufrj.ad.model.Estacao;
 import br.ufrj.ad.model.Evento;
 import br.ufrj.ad.model.Mensagem;
+import br.ufrj.ad.model.Quadro;
 import br.ufrj.ad.util.BinaryBackoff;
 
 public class Simulador
@@ -147,10 +148,27 @@ public class Simulador
 		  return;
 	  }
 	  
+	  if(estacao.getTempoInicioTentativa() == 0.0)
+		  estacao.setTempoInicioTentativa(evento.getTempoExecucao());
+	  
+	  Mensagem msg = estacao.getMensagem();
+	  Quadro qd = msg.getQuadro();
+	  
+	  if(msg.getTempoPrimeiroAcesso() == 0.0)
+	  {
+		  msg.setTempoPrimeiroAcesso(evento.getTempoExecucao());
+	  }
+	  if(qd.getTempoEntradaServidor() == 0.0)
+	  {
+		  qd.setTempoEntradaServidor(evento.getTempoExecucao());
+	  }
+	  
 	  if(estacao.getMeioOcupado() == 0)
 	  {
 		  if(!estacao.isEsperandoTempoSeguranca()) 
 		  {
+			  if(qd.getTempoInicioServico() == 0.0)
+				  qd.setTempoInicioServico(evento.getTempoExecucao());
 			  estacao.setForcar(false);
 			  for(Estacao e : listaPCs)
 			  {
@@ -181,6 +199,9 @@ public class Simulador
 	  {
 		  if(estacao.isForcar())
 		  {
+			  if(qd.getTempoInicioServico() == 0.0)
+				  qd.setTempoInicioServico(evento.getTempoExecucao());
+			  
 			  estacao.setForcar(false);
 			  for(Estacao e : listaPCs)
 			  {
@@ -232,7 +253,7 @@ public class Simulador
 	  estacao.setForcar(false);
 	  estacao.setMeioEmColisao(false);
 	  
-	  estacao.pacoteEnviado();
+	  estacao.pacoteEnviado(evento.getTempoExecucao());
 	  
 	  
 	  Evento transmissaoCompleta = new Evento(TipoEvento.FimEspera,
@@ -326,7 +347,7 @@ public class Simulador
 	  double tempoEspera = BinaryBackoff.geraAtraso(estacao.getQuantidadeColisoes());
 	  
 	  if(tempoEspera < 0)
-		  estacao.descartaPacote();
+		  estacao.descartaPacote(evento.getTempoExecucao());
 	  else
 	  {
 		  tempoEspera += evento.getTempoExecucao() + TEMPO_REFORCO_COLISAO;
@@ -337,7 +358,7 @@ public class Simulador
 		  estacao.setEsperandoBackoff(true);
 	  }
 	  
-	  estacao.setQuantidadeColisoes(estacao.getQuantidadeColisoes() + 1);
+	  estacao.incQuantidadeColisoes();
   }
   
   private void processaFimBackOff(Evento evento)

@@ -10,7 +10,7 @@ public class Exponencial
 	  if(deterministico)
 		  return a*1000000;
 	  else
-    return (-(log(MyRandom.next())/(1/a)))*1000000;
+    return (-(log(MyRandom.rand())/(1/a)))*1000000;
   }
   
 }

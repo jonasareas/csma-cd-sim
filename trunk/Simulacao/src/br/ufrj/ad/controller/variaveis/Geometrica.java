@@ -10,7 +10,7 @@ public class Geometrica
 	  if(p >= 1.0 )
 		  return (int)p;
 	  else
-		  return (int) ((log(MyRandom.next())/log(1 - p)) + 0.5);
+		  return (int) ((log(MyRandom.rand())/log(1 - p)) + 0.5);
   }
   
 }

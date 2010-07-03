@@ -5,9 +5,19 @@ import java.util.LinkedList;
 public class Estacao
 {
 
+   // Parametros da estacao
+	
   private int codigo;
   
   private double distancia;
+  
+  private double p;
+
+  private double a;
+
+  private boolean deterministico;
+  
+  // Variaveis de controle
   
   private boolean meioEmColisao;
   
@@ -23,13 +33,9 @@ public class Estacao
   
   private LinkedList<Mensagem> listaMensagens;
   
-  private double p;
-
-  private double a;
-
-  private boolean deterministico;
+  private int quadrosTransmitidos;
   
-  private int quantidadeColisoes;
+  private double tempoInicioTentativa;
   
   public Estacao(int codigo, double distancia, double p, double a, boolean ehDeterministico)
   {
@@ -44,33 +50,18 @@ public class Estacao
     this.esperandoTempoSeguranca = false;
     this.transmitindo = false;
     this.forcar = false;
-    this.quantidadeColisoes = 0;
     this.esperandoBackoff = false;
+    this.quadrosTransmitidos = 0;
   }
-  
-  public boolean enviaMensagem(Mensagem mensagem) {
-    // TODO
-    return true;
-  }
-  
+    
   public int getCodigo()
   {
     return codigo;
   }
 
-  public void setCodigo(int codigo)
-  {
-    this.codigo = codigo;
-  }
-
   public double getDistancia()
   {
     return distancia;
-  }
-
-  public void setDistancia(int distancia)
-  {
-    this.distancia = distancia;
   }
 
   public boolean isMeioEmColisao()
@@ -98,19 +89,9 @@ public class Estacao
     return p;
   }
 
-  public void setP(double p)
-  {
-    this.p = p;
-  }
-
   public double getA()
   {
     return a;
-  }
-
-  public void setA(double a)
-  {
-    this.a = a;
   }
 
   public boolean isDeterministico()
@@ -118,24 +99,17 @@ public class Estacao
     return deterministico;
   }
 
-  public void setDeterministico(boolean deterministico)
-  {
-    this.deterministico = deterministico;
-  }
-
-  public LinkedList<Mensagem> getListaMensagens()
-  {
-    return listaMensagens;
-  }
-
-  public void setListaMensagens(LinkedList<Mensagem> listaMensagens)
-  {
-    this.listaMensagens = new LinkedList<Mensagem>(listaMensagens);
-  }
-  
   public void addMensagem(Mensagem mem)
   {
 	  listaMensagens.addLast(mem);
+  }
+  
+  public Mensagem getMensagem()
+  {
+	  if(listaMensagens.isEmpty())
+		  return null;
+	  
+	  return listaMensagens.getFirst();
   }
   
   public boolean isFilaVazia()
@@ -166,47 +140,58 @@ public class Estacao
 	public boolean isForcar() {
 		return forcar;
 	} 
-	public void pacoteEnviado()
+	public void pacoteEnviado(double tempoFimServico)
 	{
+		quadrosTransmitidos++;
+		
+		//informacao pedida
+		double utilizaoEthernet = tempoFimServico - this.tempoInicioTentativa;
+		this.tempoInicioTentativa = 0.0;
+		
 		Mensagem msg = listaMensagens.getFirst();
 		
-		if(msg.getQuantidadeQuadros() <= 1)
-		{
-			listaMensagens.removeFirst();
-		}else
-		{
-			msg.setQuantidadeQuadros(msg.getQuantidadeQuadros() -1);
-		}
+		double inicio = msg.getQuadro().getTempoInicioServico();
+		double fim = msg.getTempoPrimeiroAcesso();
+		//informacao pedida
+		double tap = inicio - fim;		
 		
-		quantidadeColisoes = 0;
+		if(!msg.fimServicoQuadro())
+		{
+			//informacao pedida
+			double tam = fim - msg.getTempoPrimeiroAcesso();
+			double ncm = msg.colisoesPorQuadro();
+			listaMensagens.removeFirst();
+		}
 	}
 	
 	public int getTamanhoQuadro()
 	{
-		return Mensagem.TAMANHO_QUADRO;
+		return listaMensagens.getFirst().getQuadro().getTamanhoQuadro();
 	}
 
-	public void setQuantidadeColisoes(int quantidadeColisoes) {
-		this.quantidadeColisoes = quantidadeColisoes;
+	public void incQuantidadeColisoes() {
+		listaMensagens.getFirst().getQuadro().incColisoes();
 	}
 
 	public int getQuantidadeColisoes() {
-		return quantidadeColisoes;
+		return listaMensagens.getFirst().getQuadro().getColisoes();
 	}
 	
-	public void descartaPacote()
+	public void descartaPacote(double tempoFimTentativa)
 	{
+		double utilizaoEthernet = tempoFimTentativa - this.tempoInicioTentativa;
+		this.tempoInicioTentativa = 0.0;
+		
 		Mensagem msg = listaMensagens.getFirst();
 		
-		if(msg.getQuantidadeQuadros() <= 1)
-		{
-			listaMensagens.removeFirst();
-		}else
-		{
-			msg.setQuantidadeQuadros(msg.getQuantidadeQuadros() -1);
-		}
+		// Nao contabiliza o TAp nem o TAm 
 		
-		quantidadeColisoes = 0;
+		if(!msg.fimServicoQuadro())
+		{
+			//informacao pedida
+			double ncm = msg.colisoesPorQuadro();
+			listaMensagens.removeFirst();
+		}
 	}
 
 	public void setEsperandoBackoff(boolean esperandoBackoff) {
@@ -216,5 +201,16 @@ public class Estacao
 	public boolean isEsperandoBackoff() {
 		return esperandoBackoff;
 	}
-  
+
+	public int getQuadrosTransmitidos() {
+		return quadrosTransmitidos;
+	}
+
+	public void setTempoInicioTentativa(double tempoInicioTentativa) {
+		this.tempoInicioTentativa = tempoInicioTentativa;
+	}
+
+	public double getTempoInicioTentativa() {
+		return tempoInicioTentativa;
+	}
 }
