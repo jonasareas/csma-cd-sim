@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import javax.swing.border.BevelBorder;
 import br.ufrj.ad.controller.Simulador;
 import br.ufrj.ad.model.ConfiguracaoPc;
 
-public class Tela extends JFrame implements WindowListener,ActionListener
+public class Tela extends JFrame implements WindowListener,ActionListener,ItemListener
 {
   private JPanel jContentPane;
   private JLabel jLabelTitulo;
@@ -59,6 +61,11 @@ public class Tela extends JFrame implements WindowListener,ActionListener
   private JCheckBox jCheck3;
   private JCheckBox jCheck4;
   private JButton jButtonCenarioGenerico;  
+  
+  private boolean check1 = false;
+  private boolean check2 = false;
+  private boolean check3 = false;
+  private boolean check4 = false;
   
   public Tela()
   {
@@ -199,6 +206,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener
     
     jCheck1 = new JCheckBox();
     jCheck1.setBounds(250, 70, 50, 20);
+    jCheck1.addItemListener(this);
     jPanelCenarioGenerico.add(jCheck1);
     
     jLabelPC2 = new JLabel();
@@ -217,6 +225,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener
     
     jCheck2 = new JCheckBox();
     jCheck2.setBounds(250, 100, 50, 20);
+    jCheck2.addItemListener(this);
     jPanelCenarioGenerico.add(jCheck2);    
     
     jLabelPC3 = new JLabel();
@@ -235,6 +244,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener
     
     jCheck3 = new JCheckBox();
     jCheck3.setBounds(250, 130, 50, 20);
+    jCheck3.addItemListener(this);
     jPanelCenarioGenerico.add(jCheck3);    
     
     jLabelPC4 = new JLabel();
@@ -253,6 +263,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener
     
     jCheck4 = new JCheckBox();
     jCheck4.setBounds(250, 160, 50, 20);
+    jCheck4.addItemListener(this);
     jPanelCenarioGenerico.add(jCheck4);
     
     jButtonCenarioGenerico = new JButton();
@@ -268,7 +279,9 @@ public class Tela extends JFrame implements WindowListener,ActionListener
   private void configuraSimulacao(ConfiguracaoPc config1, ConfiguracaoPc config2, ConfiguracaoPc config3, ConfiguracaoPc config4)
   {
     Simulador simulador = new Simulador();
-    double tempoSimulacao = Double.parseDouble(jTextTempoSimulacao.getText()) * 1000000;
+    double tempoSimulacao = trataDouble(jTextTempoSimulacao.getText()) * 1000000;
+    
+    System.out.println("[LOG] Tempo de Simulação:" + tempoSimulacao);
     
     ArrayList<ConfiguracaoPc> parametros = new ArrayList<ConfiguracaoPc>();
     parametros.add(config1);
@@ -278,6 +291,40 @@ public class Tela extends JFrame implements WindowListener,ActionListener
 
     simulador.iniciaSimulacao(tempoSimulacao, parametros); 
   }
+  
+  public void itemStateChanged(ItemEvent e) {
+      Object source = e.getItemSelectable();
+      
+      if (source == jCheck1) {
+        if (e.getStateChange() == ItemEvent.DESELECTED) {
+          check1 = false;
+        } else {
+          check1 = true;
+        }
+      }
+      if (source == jCheck2) {
+        if (e.getStateChange() == ItemEvent.DESELECTED) {
+          check2 = false;
+        } else {
+          check2 = true;
+        }
+      }
+      if (source == jCheck3) {
+        if (e.getStateChange() == ItemEvent.DESELECTED) {
+          check3 = false;
+        } else {
+          check3 = true;
+        }
+      }      
+      if (source == jCheck4) {
+        if (e.getStateChange() == ItemEvent.DESELECTED) {
+          check4 = false;
+        } else {
+          check4 = true;
+        }
+      }
+
+  }  
   
   public void actionPerformed(ActionEvent e) {
     ConfiguracaoPc config1 = null;
@@ -305,17 +352,21 @@ public class Tela extends JFrame implements WindowListener,ActionListener
       config3 = new ConfiguracaoPc(3, 60, 0, 0, false);
       config4 = new ConfiguracaoPc(4, 40, 0, 0, false);   
     } else if (e.getSource().equals(jButtonCenarioGenerico)) {
-      config1 = new ConfiguracaoPc(1, 100, trataDouble(jText1P.getText()), trataDouble(jText1A.getText()), trataBoolean(jCheck1.getText()));
-      config2 = new ConfiguracaoPc(2, 80, trataDouble(jText2P.getText()), trataDouble(jText2A.getText()), trataBoolean(jCheck2.getText()));
-      config3 = new ConfiguracaoPc(3, 60, trataDouble(jText3P.getText()), trataDouble(jText3A.getText()), trataBoolean(jCheck3.getText()));
-      config4 = new ConfiguracaoPc(4, 40, trataDouble(jText4P.getText()), trataDouble(jText4A.getText()), trataBoolean(jCheck4.getText()));       
+      config1 = new ConfiguracaoPc(1, 100, trataDouble(jText1P.getText()), trataDouble(jText1A.getText()), check1);
+      config2 = new ConfiguracaoPc(2, 80, trataDouble(jText2P.getText()), trataDouble(jText2A.getText()), check2);
+      config3 = new ConfiguracaoPc(3, 60, trataDouble(jText3P.getText()), trataDouble(jText3A.getText()), check3);
+      config4 = new ConfiguracaoPc(4, 40, trataDouble(jText4P.getText()), trataDouble(jText4A.getText()), check4);     
+      
+      System.out.println(trataDouble("[LOG] Parâmetros da Estação 1: " + jText1P.getText()) + " " +  trataDouble(jText1A.getText()) + " " +  check1);
+      System.out.println(trataDouble("[LOG] Parâmetros da Estação 2: " + jText2P.getText()) + " " +  trataDouble(jText2A.getText()) + " " +  check2);
+      System.out.println(trataDouble("[LOG] Parâmetros da Estação 3: " + jText3P.getText()) + " " +  trataDouble(jText3A.getText()) + " " +  check3);
+      System.out.println(trataDouble("[LOG] Parâmetros da Estação 4: " + jText4P.getText()) + " " +  trataDouble(jText4A.getText()) + " " +  check4);
     }
     configuraSimulacao(config1, config2, config3, config4);     
   }
   
   private double trataDouble(String texto)
   {
-    System.out.println("BLA BLA " + texto);
     if (texto == null || texto.isEmpty())
       return 0;
     else 
@@ -329,14 +380,6 @@ public class Tela extends JFrame implements WindowListener,ActionListener
       return retorno;
     }
   }  
-  
-  private boolean trataBoolean(String texto)
-  {
-    if (texto == null || texto.isEmpty())
-      return false;
-    else
-      return true;
-  }    
   
   public void windowClosing(WindowEvent e) {
     dispose();
