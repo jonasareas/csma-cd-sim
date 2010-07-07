@@ -15,21 +15,24 @@ import br.ufrj.ad.util.BinaryBackoff;
 
 public class Simulador
 {
-  public static enum TipoEvento //TODO Temos que caracterizar bem caa uma destas
+  public static enum TipoEvento 
   {
     ChegadaNaFila, 
     TentativaEnvio, 
     FimTransmissao, 
-    MeioOcupado, 
-    MeioLivre, 
+    MeioOcupado,
+    MeioOcupadoPorMim,
+    MeioLivre,
+    MeioLivrePorMim,
     FimEspera, 
-    FimReforco, 
+    FimReforcoColisao, 
     FimBackOff
   }
 
   private static final double   PROPAGACAO_ELETRICA      = 0.000005;    // Em milisegundos/metro
   private static final double   TEMPO_ENTRE_TRANSMISSOES = 0.0096;      // Em milisegundos
   private static final double   TEMPO_REFORCO_COLISAO    = 0.0032;      // Em milisegundos
+  private static final double   TEMPO_ENVIO_DE_UM_BYTE   = 0.0008;      // Em milisegundos
 
   private PriorityQueue<Evento> listaEventos;
 
@@ -111,15 +114,14 @@ public class Simulador
         System.out.println(evento.getTempoExecucao() + ": Meio ocupado em " + evento.getCodigoEstacao());
         processaMeioOcupado(evento);
         break;
-      case FimReforco:
+      case FimReforcoColisao:
         System.out.println(evento.getTempoExecucao() + ": Fim de reforco de " + evento.getCodigoEstacao());
-        processaFimReforco(evento);
+        processaFimReforcoColisao(evento);
         break;
       case FimBackOff:
         System.out.println(evento.getTempoExecucao() + ": Fim de backoff de " + evento.getCodigoEstacao());
         processaFimBackOff(evento);
         break;
-
     }
   }
 
@@ -142,18 +144,18 @@ public class Simulador
 
   }
 
-  private void processaTentativaEnvio(Evento evento) //TODO: Esse método tá meio obscuro pra mim. =S
+  private void processaTentativaEnvio(Evento evento) 
   {
     Estacao estacao = buscaEstacao(evento.getCodigoEstacao());
 
     if (estacao.isFilaVazia()) 
     {
-      estacao.setForcar(false); //TODO Nao entendi. O que é isso?
-      System.out.println("Fila vazia na estacao " +  estacao.getCodigo());
+      estacao.setForcarEnvio(false); 
+      System.out.println("ACONTECE SIM ARMANDO!!!!! =P Fila vazia na estacao " +  estacao.getCodigo());
       return;
     }
 
-    if (estacao.getTempoInicioTentativa() == 0.0) //TODO Nao entendi. O que é isso?
+    if (estacao.getTempoInicioTentativa() == 0.0) // Estatísticas
       estacao.setTempoInicioTentativa(evento.getTempoExecucao());
 
     Mensagem msg = estacao.getMensagem();
@@ -172,14 +174,14 @@ public class Simulador
     {
       if (!estacao.isEsperandoTempoSeguranca())
       {
-        if (qd.getTempoInicioServico() == 0.0) //TODO Nao entendi. O que é isso?
+        if (qd.getTempoInicioEnvio() == 0.0) // Estatísticas
         {
           qd.setTempoInicioServico(evento.getTempoExecucao());
         }
-        estacao.setForcar(false);
+        estacao.setForcarEnvio(false);
         for (Estacao e : listaPCs)
         {
-          if (e.getCodigo() != estacao.getCodigo()) //TODO A própria estação recebe o sinal também, não?
+          if (e.getCodigo() != estacao.getCodigo())
           {
             double distanciaTotal = e.getDistancia() + estacao.getDistancia();
             double tempoInicioPercepecao = evento.getTempoExecucao();
@@ -192,24 +194,24 @@ public class Simulador
         }
         estacao.setTransmitindo(true);
         double tempoDeFim = evento.getTempoExecucao();
-        tempoDeFim += estacao.getTamanhoQuadro() * 8 / 10.0; // TODO: O que significa a conta?
+        tempoDeFim += estacao.getTamanhoQuadro() * TEMPO_ENVIO_DE_UM_BYTE; 
 
         Evento fimTransmissao = new Evento(TipoEvento.FimTransmissao, tempoDeFim, estacao.getCodigo());
         listaEventos.add(fimTransmissao);
       }
       else
       {
-        estacao.setForcar(true);
+        estacao.setForcarEnvio(true);
       }
     }
     else
     {
-      if (estacao.isForcar())
+      if (estacao.isForcarEnvio()) 
       {
-        if (qd.getTempoInicioServico() == 0.0)
+        if (qd.getTempoInicioEnvio() == 0.0)
           qd.setTempoInicioServico(evento.getTempoExecucao());
 
-        estacao.setForcar(false);
+        estacao.setForcarEnvio(false);
         for (Estacao e : listaPCs)
         {
           if (e.getCodigo() != estacao.getCodigo()) //TODO Vamos colocar isso num método separado. Código repetido (varias e varias vezes =S)!
@@ -228,7 +230,7 @@ public class Simulador
         estacao.setMeioEmColisao(true);
         double tempoDeFim = evento.getTempoExecucao() + TEMPO_REFORCO_COLISAO;
 
-        Evento fimTransmicao = new Evento(TipoEvento.FimReforco, tempoDeFim, estacao.getCodigo());
+        Evento fimTransmicao = new Evento(TipoEvento.FimReforcoColisao, tempoDeFim, estacao.getCodigo());
         listaEventos.add(fimTransmicao);
       }
       else
@@ -258,7 +260,7 @@ public class Simulador
 
     estacao.setEsperandoTempoSeguranca(true);
     estacao.setTransmitindo(false);
-    estacao.setForcar(false);
+    estacao.setForcarEnvio(false);
     estacao.setMeioEmColisao(false);
 
     estacao.pacoteEnviado(evento.getTempoExecucao());
@@ -293,9 +295,9 @@ public class Simulador
 
     if (estacao.getMeioOcupado() == 0)
     {
-      if (estacao.isEsperandoTempoSeguranca())
+      if (estacao.isEsperandoTempoSeguranca() && !estacao.isFilaVazia())
       {
-        estacao.setForcar(true);
+        estacao.setForcarEnvio(true);
       }
       else
       {
@@ -321,12 +323,12 @@ public class Simulador
 
     estacao.setMeioEmColisao(true);
 
-    Evento fimReforco = new Evento(TipoEvento.FimReforco, evento.getTempoExecucao() + TEMPO_REFORCO_COLISAO, estacao.getCodigo());
+    Evento fimReforco = new Evento(TipoEvento.FimReforcoColisao, evento.getTempoExecucao() + TEMPO_REFORCO_COLISAO, estacao.getCodigo());
     listaEventos.add(fimReforco);
 
   }
 
-  private void processaFimReforco(Evento evento)
+  private void processaFimReforcoColisao(Evento evento)
   {
     Estacao estacao = buscaEstacao(evento.getCodigoEstacao());
 
@@ -335,27 +337,29 @@ public class Simulador
       if (e.getCodigo() != estacao.getCodigo())
       {
         double distanciaTotal = e.getDistancia() + estacao.getDistancia();
-        double tempoFimPercepecao = evento.getTempoExecucao();
+        double tempoPercepecao = evento.getTempoExecucao();
 
-        tempoFimPercepecao += PROPAGACAO_ELETRICA * distanciaTotal;
+        tempoPercepecao += PROPAGACAO_ELETRICA * distanciaTotal;
 
-        Evento inicioPercepcao = new Evento(TipoEvento.MeioLivre, tempoFimPercepecao, e.getCodigo());
-        listaEventos.add(inicioPercepcao);
+        Evento eventoPercepcao = new Evento(TipoEvento.MeioLivre, tempoPercepecao, e.getCodigo());
+        listaEventos.add(eventoPercepcao);
       }
     }
 
     estacao.setEsperandoTempoSeguranca(false);
     estacao.setTransmitindo(false);
-    estacao.setForcar(false);
+    estacao.setForcarEnvio(false);
     estacao.setMeioEmColisao(false);
 
+    estacao.incrementaQuantidadeColisoes(); 
+    
     double tempoEspera = BinaryBackoff.geraAtraso(estacao.getQuantidadeColisoes());
 
     if (tempoEspera < 0)
       estacao.descartaPacote(evento.getTempoExecucao());
     else
     {
-      tempoEspera += evento.getTempoExecucao() + TEMPO_REFORCO_COLISAO;
+      tempoEspera += evento.getTempoExecucao();
 
       Evento esperaBackOff = new Evento(TipoEvento.FimBackOff, tempoEspera, estacao.getCodigo());
       listaEventos.add(esperaBackOff);
@@ -363,7 +367,6 @@ public class Simulador
       estacao.setEsperandoBackoff(true);
     }
 
-    estacao.incQuantidadeColisoes();
   }
 
   private void processaFimBackOff(Evento evento)
@@ -375,4 +378,5 @@ public class Simulador
     Evento novaTentativa = new Evento(TipoEvento.TentativaEnvio, evento.getTempoExecucao(), estacao.getCodigo());
     listaEventos.add(novaTentativa);
   }
+   
 }

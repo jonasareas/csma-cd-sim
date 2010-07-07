@@ -33,7 +33,7 @@ public class Quadro
     this.tempoInicioServico = tempoInicioServico;
   }
 
-  public double getTempoInicioServico()
+  public double getTempoInicioEnvio()
   {
     return tempoInicioServico;
   }

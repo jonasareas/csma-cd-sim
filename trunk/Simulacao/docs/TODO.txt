@@ -86,24 +86,32 @@ NCm(i)= número médio de colisões por quadro na estação i
 
 VER ITEM 5
 
-Teste de Correção
-Inserção de eventos na fila de controle pode ser fonte de erro. 
-TESTAR: situação em que só uma estação transmite.  Faça a estação gerar tráfego determinístico e comprove os valores obtidos com o esperado.
 
 
-1 - Unidades
-2 - Todas as estações, inclusive a que transmitiu, irão receber em seu rx o sinal retransmitido, após o atraso de propagação devido?
-3 - Uma estação não colide consigo mesma, apesar de receber sua própria transmissão?
-4 - Uma estação transmitindo, sempre está com seu circuito de detecção de colisão ativado?
-5 - Tempo mínimo de 9,6 μs (equivalente a 96 bits transmitidos no meio) entre quadros?
-6 - COMO DETECTA COLISAO? COMO SENTE MEIO LIVRE?
-7 - Se uma estação for a única a transmitir na rede, seus quadros são necessariamente transmitidos com um intervalo de 9,6 μs entre eles?
-8 - O reforço de colisão pode ser visto como uma extensão do tempo de transmissão do quadro abortado. O final da última transmissão, então, poderá ser entendido como o final de transmissão de um quadro abortado ou o final de uma transmissão com sucesso?
-9 - Uma estação só processa um quadro por vez. Um quadro é transmitido com sucesso quando não há deteção de colisão durante sua transmissão.
 
-1 - MyRandom? 
-2 - Validar VAs
+TESTES DE CORRECAO:
+Uma estação transmitindo - 1 quadro
+Estação 1 transmitindo - 1 quadro - 100 ms D - durante 0.5s
+Estação 1 transmitindo - 1 quadro - 100 ms E - durante 0.5s (sem chegadas entre o ciclo)
+Estação 1 transmitindo - 1 quadro - 10 ms E - durante 0.5s (chegadas entre o ciclo)
 
-3 - Em Estacao utilziacaoEthernet eh soh para o PC1!
-4 - this.quantidadeQuadros = tamanho - 1; em Mensagem
-5 - private int meioOcupado; // indica quantos pcs estao ocupando o meio - nao eh no maximo 1?
+UMA ESACAO - TODOS OS CASOS - OK
+
+FIM DE ESPERA == MEIO OCUPADO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+14.804617233839423: Chegada na Fila de 1
+14.804617233839423: Tentativa de Envio de 1
+14.805317233839423: Meio ocupado em 4
+14.805417233839423: Meio ocupado em 3
+14.805517233839423: Meio ocupado em 2
+15.604617233839424: Fim de transmissao de 1
+15.605317233839424: Meio Livre em 4
+15.605417233839423: Meio Livre em 3
+15.605517233839423: Meio Livre em 2
+15.614217233839424: Fim de espera de 1
+
+
+RESOLVER:
+1 - Todas as estações, inclusive a que transmitiu, irão receber em seu rx o sinal retransmitido, após o atraso de propagação devido.
+2 - Uma estação não colide consigo mesma, apesar de receber sua própria transmissão.
+3 - !!!!!!!!!!!!Um quadro é transmitido com sucesso quando não há deteção de colisão durante sua transmissão.!!!!!!!!!!!

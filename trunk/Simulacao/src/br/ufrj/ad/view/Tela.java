@@ -357,10 +357,10 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
       config3 = new ConfiguracaoPc(3, 60, trataDouble(jText3P.getText()), trataDouble(jText3A.getText()), check3);
       config4 = new ConfiguracaoPc(4, 40, trataDouble(jText4P.getText()), trataDouble(jText4A.getText()), check4);     
       
-      System.out.println(trataDouble("[LOG] Parâmetros da Estação 1: " + jText1P.getText()) + " " +  trataDouble(jText1A.getText()) + " " +  check1);
-      System.out.println(trataDouble("[LOG] Parâmetros da Estação 2: " + jText2P.getText()) + " " +  trataDouble(jText2A.getText()) + " " +  check2);
-      System.out.println(trataDouble("[LOG] Parâmetros da Estação 3: " + jText3P.getText()) + " " +  trataDouble(jText3A.getText()) + " " +  check3);
-      System.out.println(trataDouble("[LOG] Parâmetros da Estação 4: " + jText4P.getText()) + " " +  trataDouble(jText4A.getText()) + " " +  check4);
+      System.out.println("[LOG] Parâmetros da Estação 1: " + trataDouble(jText1P.getText()) + " " +  trataDouble(jText1A.getText()) + " " +  check1);
+      System.out.println("[LOG] Parâmetros da Estação 2: " + trataDouble(jText2P.getText()) + " " +  trataDouble(jText2A.getText()) + " " +  check2);
+      System.out.println("[LOG] Parâmetros da Estação 3: " + trataDouble(jText3P.getText()) + " " +  trataDouble(jText3A.getText()) + " " +  check3);
+      System.out.println("[LOG] Parâmetros da Estação 4: " + trataDouble(jText4P.getText()) + " " +  trataDouble(jText4A.getText()) + " " +  check4);
     }
     configuraSimulacao(config1, config2, config3, config4);     
   }

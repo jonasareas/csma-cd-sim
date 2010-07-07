@@ -4,9 +4,9 @@ public class Mensagem
 {
   public static final int TAMANHO_QUADRO = 1000; // Em bytes
 
-  private int             quantidadeQuadros;
+  private int             quantidadeQuadros;    // Quantidade restante de quadros a serem enviados
 
-  private int             totalQuadros;
+  private int             totalQuadros;         // Total de quadros da mensagem
 
   private Quadro          quadro         = null;
 
