@@ -4,39 +4,38 @@ import java.util.LinkedList;
 
 public class Estacao
 {
+  // Parametros da estacao
 
-   // Parametros da estacao
-	
-  private int codigo;
-  
-  private double distancia;
-  
-  private double p;
+  private int                  codigo;
 
-  private double a;
+  private double               distancia;
 
-  private boolean deterministico;
-  
+  private double               p;
+
+  private double               a;
+
+  private boolean              deterministico;
+
   // Variaveis de controle
-  
-  private boolean meioEmColisao;
-  
-  private int meioOcupado; // indica quantos pcs estao ocupando o meio
-  
-  private boolean esperandoTempoSeguranca;
-  
-  private boolean esperandoBackoff;
-  
-  private boolean transmitindo;
-  
-  private boolean forcar;
-  
+
+  private boolean              meioEmColisao;
+
+  private int                  meioOcupado;            // indica quantos pcs estao ocupando o meio
+
+  private boolean              esperandoTempoSeguranca;
+
+  private boolean              esperandoBackoff;
+
+  private boolean              transmitindo;
+
+  private boolean              forcar;
+
   private LinkedList<Mensagem> listaMensagens;
-  
-  private int quadrosTransmitidos;
-  
-  private double tempoInicioTentativa;
-  
+
+  private int                  quadrosTransmitidos;
+
+  private double               tempoInicioTentativa;
+
   public Estacao(int codigo, double distancia, double p, double a, boolean ehDeterministico)
   {
     this.codigo = codigo;
@@ -53,7 +52,7 @@ public class Estacao
     this.esperandoBackoff = false;
     this.quadrosTransmitidos = 0;
   }
-    
+
   public int getCodigo()
   {
     return codigo;
@@ -101,116 +100,131 @@ public class Estacao
 
   public void addMensagem(Mensagem mem)
   {
-	  listaMensagens.addLast(mem);
+    listaMensagens.addLast(mem);
   }
-  
+
   public Mensagem getMensagem()
   {
-	  if(listaMensagens.isEmpty())
-		  return null;
-	  
-	  return listaMensagens.getFirst();
+    if (listaMensagens.isEmpty())
+      return null;
+
+    return listaMensagens.getFirst();
   }
-  
+
   public boolean isFilaVazia()
   {
-	return listaMensagens.isEmpty();  
+    return listaMensagens.isEmpty();
   }
 
-  public void setEsperandoTempoSeguranca(boolean esperandoTempoSeguranca) {
-	this.esperandoTempoSeguranca = esperandoTempoSeguranca;
+  public void setEsperandoTempoSeguranca(boolean esperandoTempoSeguranca)
+  {
+    this.esperandoTempoSeguranca = esperandoTempoSeguranca;
   }
 
-  public boolean isEsperandoTempoSeguranca() {
-	return esperandoTempoSeguranca;
+  public boolean isEsperandoTempoSeguranca()
+  {
+    return esperandoTempoSeguranca;
   }
 
-	public void setTransmitindo(boolean transmitindo) {
-		this.transmitindo = transmitindo;
-	}
-	
-	public boolean isTransmitindo() {
-		return transmitindo;
-	}
-	
-	public void setForcar(boolean forcar) {
-		this.forcar = forcar;
-	}
-	
-	public boolean isForcar() {
-		return forcar;
-	} 
-	public void pacoteEnviado(double tempoFimServico)
-	{
-		quadrosTransmitidos++;
-		
-		//informacao pedida
-		double utilizaoEthernet = tempoFimServico - this.tempoInicioTentativa;
-		this.tempoInicioTentativa = 0.0;
-		
-		Mensagem msg = listaMensagens.getFirst();
-		
-		double inicio = msg.getQuadro().getTempoInicioServico();
-		double fim = msg.getTempoPrimeiroAcesso();
-		//informacao pedida
-		double tap = inicio - fim;		
-		
-		if(!msg.fimServicoQuadro())
-		{
-			//informacao pedida
-			double tam = fim - msg.getTempoPrimeiroAcesso();
-			double ncm = msg.colisoesPorQuadro();
-			listaMensagens.removeFirst();
-		}
-	}
-	
-	public int getTamanhoQuadro()
-	{
-		return listaMensagens.getFirst().getQuadro().getTamanhoQuadro();
-	}
+  public void setTransmitindo(boolean transmitindo)
+  {
+    this.transmitindo = transmitindo;
+  }
 
-	public void incQuantidadeColisoes() {
-		listaMensagens.getFirst().getQuadro().incColisoes();
-	}
+  public boolean isTransmitindo()
+  {
+    return transmitindo;
+  }
 
-	public int getQuantidadeColisoes() {
-		return listaMensagens.getFirst().getQuadro().getColisoes();
-	}
-	
-	public void descartaPacote(double tempoFimTentativa)
-	{
-		double utilizaoEthernet = tempoFimTentativa - this.tempoInicioTentativa;
-		this.tempoInicioTentativa = 0.0;
-		
-		Mensagem msg = listaMensagens.getFirst();
-		
-		// Nao contabiliza o TAp nem o TAm 
-		
-		if(!msg.fimServicoQuadro())
-		{
-			//informacao pedida
-			double ncm = msg.colisoesPorQuadro();
-			listaMensagens.removeFirst();
-		}
-	}
+  public void setForcar(boolean forcar)
+  {
+    this.forcar = forcar;
+  }
 
-	public void setEsperandoBackoff(boolean esperandoBackoff) {
-		this.esperandoBackoff = esperandoBackoff;
-	}
+  public boolean isForcar()
+  {
+    return forcar;
+  }
 
-	public boolean isEsperandoBackoff() {
-		return esperandoBackoff;
-	}
+  public void pacoteEnviado(double tempoFimServico)
+  {
+    quadrosTransmitidos++;
 
-	public int getQuadrosTransmitidos() {
-		return quadrosTransmitidos;
-	}
+    // informacao pedida
+    double utilizaoEthernet = tempoFimServico - this.tempoInicioTentativa;
+    this.tempoInicioTentativa = 0.0;
 
-	public void setTempoInicioTentativa(double tempoInicioTentativa) {
-		this.tempoInicioTentativa = tempoInicioTentativa;
-	}
+    Mensagem msg = listaMensagens.getFirst();
 
-	public double getTempoInicioTentativa() {
-		return tempoInicioTentativa;
-	}
+    double inicio = msg.getQuadro().getTempoInicioServico();
+    double fim = msg.getTempoPrimeiroAcesso();
+    
+    // informacao pedida
+    double tap = inicio - fim;
+
+    if (!msg.fimServicoQuadro())
+    {
+      // informacao pedida
+      double tam = fim - msg.getTempoPrimeiroAcesso();
+      double ncm = msg.colisoesPorQuadro();
+      listaMensagens.removeFirst();
+    }
+  }
+
+  public int getTamanhoQuadro()
+  {
+    return listaMensagens.getFirst().getQuadro().getTamanhoQuadro();
+  }
+
+  public void incQuantidadeColisoes()
+  {
+    listaMensagens.getFirst().getQuadro().incrementaColisoes();
+  }
+
+  public int getQuantidadeColisoes()
+  {
+    return listaMensagens.getFirst().getQuadro().getColisoes();
+  }
+
+  public void descartaPacote(double tempoFimTentativa)
+  {
+    double utilizaoEthernet = tempoFimTentativa - this.tempoInicioTentativa;
+    this.tempoInicioTentativa = 0.0;
+
+    Mensagem msg = listaMensagens.getFirst();
+
+    // Nao contabiliza o TAp nem o TAm
+
+    if (!msg.fimServicoQuadro())
+    {
+      // informacao pedida
+      double ncm = msg.colisoesPorQuadro();
+      listaMensagens.removeFirst();
+    }
+  }
+
+  public void setEsperandoBackoff(boolean esperandoBackoff)
+  {
+    this.esperandoBackoff = esperandoBackoff;
+  }
+
+  public boolean isEsperandoBackoff()
+  {
+    return esperandoBackoff;
+  }
+
+  public int getQuadrosTransmitidos()
+  {
+    return quadrosTransmitidos;
+  }
+
+  public void setTempoInicioTentativa(double tempoInicioTentativa)
+  {
+    this.tempoInicioTentativa = tempoInicioTentativa;
+  }
+
+  public double getTempoInicioTentativa()
+  {
+    return tempoInicioTentativa;
+  }
 }

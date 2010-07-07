@@ -1,22 +1,23 @@
 package br.ufrj.ad.util;
 
-
 public class BinaryBackoff
 {
-  private static final int SLOT_TEMPO = 51200; // em nanosegundos
-  private static final int COLISOES_MAXIMO = 10;
-  private static final int COLISOES_DESCARTE = 16;
-  
-  // Em nanosegundos
+  private static final double SLOT_TEMPO        = 0.0512; // em milisegundos
+  private static final int    COLISOES_MAXIMO   = 10;
+  private static final int    COLISOES_DESCARTE = 16;
+
+  // Em milisegundos
   public static double geraAtraso(int numeroColisoes)
   {
     if (numeroColisoes > COLISOES_DESCARTE)
     {
       return -1;
-    } else {
+    }
+    else
+    {
       int k = Math.min(numeroColisoes, COLISOES_MAXIMO);
-      return (int) (MyRandom.rand() * (Math.pow(2, k))) * (SLOT_TEMPO); 
-      // O fato de truncarmos para inteiro elimina a necessidade de subtrairmos 1 do resultado
+      double tempo = (int) (Math.random() * (Math.pow(2, k))) * (SLOT_TEMPO);
+      return Math.floor(tempo * 10000)/10000;
     }
   }
 
