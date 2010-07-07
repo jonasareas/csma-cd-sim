@@ -12,8 +12,8 @@ public class Evento implements Comparable<Evento>
   private int codigoEstacao;
   
   public Evento(TipoEvento tipoEvento, double tempoExecucao, int codigoEstacao) {
-    this.tempoExecucao = tempoExecucao;
     this.tipoEvento = tipoEvento;
+    this.tempoExecucao = tempoExecucao;
     this.codigoEstacao = codigoEstacao;
   }
   

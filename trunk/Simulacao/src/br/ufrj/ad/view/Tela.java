@@ -179,9 +179,9 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jPanelCenarioGenerico.add(jLabelParametroP);        
     
     jLabelParametroA = new JLabel();
-    jLabelParametroA.setText("A");
+    jLabelParametroA.setText("A (em ms)");
     jLabelParametroA.setFont(new java.awt.Font("Arial",1,11));
-    jLabelParametroA.setBounds(160, 40, 60, 20);
+    jLabelParametroA.setBounds(132, 40, 60, 20);
     jPanelCenarioGenerico.add(jLabelParametroA);  
     
     jLabelParametroDeterministico = new JLabel();
@@ -279,7 +279,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
   private void configuraSimulacao(ConfiguracaoPc config1, ConfiguracaoPc config2, ConfiguracaoPc config3, ConfiguracaoPc config4)
   {
     Simulador simulador = new Simulador();
-    double tempoSimulacao = trataDouble(jTextTempoSimulacao.getText()) * 1000000;
+    double tempoSimulacao = trataDouble(jTextTempoSimulacao.getText()) * 1000; // Passando para milisegundos.
     
     System.out.println("[LOG] Tempo de Simulação:" + tempoSimulacao);
     
@@ -337,20 +337,20 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
       config3 = new ConfiguracaoPc(3, 60, 0, 0, false);
       config4 = new ConfiguracaoPc(4, 40, 0, 0, false);   
     } else if (e.getSource().equals(jButtonCenario2)) {
-      config1 = new ConfiguracaoPc(1, 100, 40, 80, true);
-      config2 = new ConfiguracaoPc(2, 80, 40, 80, true);
+      config1 = new ConfiguracaoPc(1, 100, 40, 80, false);
+      config2 = new ConfiguracaoPc(2, 80, 40, 80, false);
       config3 = new ConfiguracaoPc(3, 60, 0, 0, false);
       config4 = new ConfiguracaoPc(4, 40, 0, 0, false);   
     } else if (e.getSource().equals(jButtonCenario3)) {
       config1 = new ConfiguracaoPc(1, 100, 40, 80, true);
-      config2 = new ConfiguracaoPc(2, 80, 40, 80, true);
-      config3 = new ConfiguracaoPc(3, 60, 0, 0, false);
-      config4 = new ConfiguracaoPc(4, 40, 0, 0, false);   
+      config2 = new ConfiguracaoPc(2, 80, 1, 16, true);
+      config3 = new ConfiguracaoPc(3, 60, 1, 16, true);
+      config4 = new ConfiguracaoPc(4, 40, 1, 16, true);   
     } else if (e.getSource().equals(jButtonCenario4)) {
       config1 = new ConfiguracaoPc(1, 100, 40, 80, true);
-      config2 = new ConfiguracaoPc(2, 80, 40, 80, true);
-      config3 = new ConfiguracaoPc(3, 60, 0, 0, false);
-      config4 = new ConfiguracaoPc(4, 40, 0, 0, false);   
+      config2 = new ConfiguracaoPc(2, 80, 1, 16, false);
+      config3 = new ConfiguracaoPc(3, 60, 1, 16, false);
+      config4 = new ConfiguracaoPc(4, 40, 1, 16, false);   
     } else if (e.getSource().equals(jButtonCenarioGenerico)) {
       config1 = new ConfiguracaoPc(1, 100, trataDouble(jText1P.getText()), trataDouble(jText1A.getText()), check1);
       config2 = new ConfiguracaoPc(2, 80, trataDouble(jText2P.getText()), trataDouble(jText2A.getText()), check2);
