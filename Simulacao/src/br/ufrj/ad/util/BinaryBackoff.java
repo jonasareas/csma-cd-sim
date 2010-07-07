@@ -16,7 +16,7 @@ public class BinaryBackoff
     else
     {
       int k = Math.min(numeroColisoes, COLISOES_MAXIMO);
-      double tempo = (int) (Math.random() * (Math.pow(2, k))) * (SLOT_TEMPO);
+      double tempo = (int) (MyRandom.rand() * (Math.pow(2, k))) * (SLOT_TEMPO);
       return Math.floor(tempo * 10000)/10000;
     }
   }

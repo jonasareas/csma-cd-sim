@@ -28,7 +28,7 @@ public class Estacao
 
   private boolean              transmitindo;
 
-  private boolean              forcar;
+  private boolean              forcarEnvio;
 
   private LinkedList<Mensagem> listaMensagens;
 
@@ -48,7 +48,7 @@ public class Estacao
     this.meioOcupado = 0;
     this.esperandoTempoSeguranca = false;
     this.transmitindo = false;
-    this.forcar = false;
+    this.forcarEnvio = false;
     this.esperandoBackoff = false;
     this.quadrosTransmitidos = 0;
   }
@@ -136,14 +136,14 @@ public class Estacao
     return transmitindo;
   }
 
-  public void setForcar(boolean forcar)
+  public void setForcarEnvio(boolean forcarEnvio)
   {
-    this.forcar = forcar;
+    this.forcarEnvio = forcarEnvio;
   }
 
-  public boolean isForcar()
+  public boolean isForcarEnvio()
   {
-    return forcar;
+    return forcarEnvio;
   }
 
   public void pacoteEnviado(double tempoFimServico)
@@ -156,7 +156,7 @@ public class Estacao
 
     Mensagem msg = listaMensagens.getFirst();
 
-    double inicio = msg.getQuadro().getTempoInicioServico();
+    double inicio = msg.getQuadro().getTempoInicioEnvio();
     double fim = msg.getTempoPrimeiroAcesso();
     
     // informacao pedida
@@ -165,7 +165,7 @@ public class Estacao
     if (!msg.fimServicoQuadro())
     {
       // informacao pedida
-      double tam = fim - msg.getTempoPrimeiroAcesso();
+      double tam = inicio - msg.getTempoPrimeiroAcesso();
       double ncm = msg.colisoesPorQuadro();
       listaMensagens.removeFirst();
     }
@@ -176,7 +176,7 @@ public class Estacao
     return listaMensagens.getFirst().getQuadro().getTamanhoQuadro();
   }
 
-  public void incQuantidadeColisoes()
+  public void incrementaQuantidadeColisoes()
   {
     listaMensagens.getFirst().getQuadro().incrementaColisoes();
   }
@@ -188,7 +188,7 @@ public class Estacao
 
   public void descartaPacote(double tempoFimTentativa)
   {
-    double utilizaoEthernet = tempoFimTentativa - this.tempoInicioTentativa;
+    double utilizacaoEthernet = tempoFimTentativa - this.tempoInicioTentativa; //EH SOH PARA O PC 1
     this.tempoInicioTentativa = 0.0;
 
     Mensagem msg = listaMensagens.getFirst();

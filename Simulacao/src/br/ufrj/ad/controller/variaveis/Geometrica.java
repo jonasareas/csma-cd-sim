@@ -1,14 +1,19 @@
 package br.ufrj.ad.controller.variaveis;
 
 import static java.lang.Math.log;
+import br.ufrj.ad.util.MyRandom;
 
 public class Geometrica
 {
 
   public static int geraAmostraGeometrica(double p)
   {
-    // return (int) ((log(Math.random()) / log(1 - p)));
-    return (int) ((log(Math.random()) / log(1 - p)) + 0.5);
+    int numeroGerado = (int) ((log(MyRandom.rand()) / log(1 - p)) + 0.5);
+    while (numeroGerado == 0) {
+      numeroGerado = (int) ((log(MyRandom.rand()) / log(1 - p)) + 0.5);
+    }
+    System.out.println("[LOG] Número de quadros: " + numeroGerado);
+    return numeroGerado;
   }
 
 }
