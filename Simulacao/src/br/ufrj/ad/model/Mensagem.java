@@ -10,11 +10,13 @@ public class Mensagem
 
   private Quadro          quadro         = null;
 
-  private double          tempoPrimeiroAcesso;
+  private double          tempoInicialAcesso;
 
   private int             totalColisoes;
+  
+  private int             codigoRodadaEntrada;
 
-  public Mensagem(int tamanho)
+  public Mensagem(int tamanho,int codigoRodadaEntrada)
   {
     if (tamanho > 0)
     {
@@ -22,7 +24,8 @@ public class Mensagem
       this.quantidadeQuadros = tamanho - 1;
       quadro = new Quadro(TAMANHO_QUADRO);
     }
-    tempoPrimeiroAcesso = 0.0;
+    this.codigoRodadaEntrada = codigoRodadaEntrada ;
+    tempoInicialAcesso = 0.0;
     totalColisoes = 0;
   }
 
@@ -51,15 +54,15 @@ public class Mensagem
     return quantidadeQuadros;
   }
 
-  public void setTempoPrimeiroAcesso(double tempoPrimeiroAcesso)
+  public void setTempoInicialAcesso(double tempoPrimeiroAcesso)
   {
-    this.tempoPrimeiroAcesso = tempoPrimeiroAcesso;
-    quadro.setTempoEntradaServidor(tempoPrimeiroAcesso);
+    this.tempoInicialAcesso = tempoPrimeiroAcesso;
+    quadro.setTempoInicialAcesso(tempoPrimeiroAcesso);
   }
 
-  public double getTempoPrimeiroAcesso()
+  public double getTempoInicialAcesso()
   {
-    return tempoPrimeiroAcesso;
+    return tempoInicialAcesso;
   }
 
   /*
@@ -71,6 +74,11 @@ public class Mensagem
   public double colisoesPorQuadro()
   {
     return (double) (totalColisoes) / (double) (totalQuadros);
+  }
+
+  public int getCodigoRodadaEntrada()
+  {
+    return codigoRodadaEntrada;
   }
 
 }

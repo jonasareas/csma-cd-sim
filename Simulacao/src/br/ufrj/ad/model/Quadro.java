@@ -3,9 +3,9 @@ package br.ufrj.ad.model;
 public class Quadro
 {
 
-  private double tempoEntradaServidor;
+  private double tempoInicialAcesso;
 
-  private double tempoInicioServico;
+  private double tempoFinalAcesso;
 
   private int    tamanhoQuadro;
 
@@ -14,8 +14,8 @@ public class Quadro
   public Quadro(int tamanhoQuadro)
   {
     this.tamanhoQuadro = tamanhoQuadro;
-    this.tempoEntradaServidor = 0.0;
-    this.tempoInicioServico = 0.0;
+    this.tempoInicialAcesso = 0.0;
+    this.tempoFinalAcesso = 0.0;
   }
 
   public void setTamanhoQuadro(int tamanhoQuadro)
@@ -28,24 +28,24 @@ public class Quadro
     return tamanhoQuadro;
   }
 
-  public void setTempoInicioServico(double tempoInicioServico)
+  public void setFinalAcesso(double tempoInicioServico)
   {
-    this.tempoInicioServico = tempoInicioServico;
+    this.tempoFinalAcesso = tempoInicioServico;
   }
 
-  public double getTempoInicioEnvio()
+  public double getTempoFinalAcesso()
   {
-    return tempoInicioServico;
+    return tempoFinalAcesso;
   }
 
-  public void setTempoEntradaServidor(double tempoEntradaServidor)
+  public void setTempoInicialAcesso(double tempoEntradaServidor)
   {
-    this.tempoEntradaServidor = tempoEntradaServidor;
+    this.tempoInicialAcesso = tempoEntradaServidor;
   }
 
-  public double getTempoEntradaServidor()
+  public double getTempoInicialAcesso()
   {
-    return tempoEntradaServidor;
+    return tempoInicialAcesso;
   }
 
   public void incrementaColisoes()
