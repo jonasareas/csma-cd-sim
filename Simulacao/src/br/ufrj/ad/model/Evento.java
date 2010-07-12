@@ -47,7 +47,6 @@ public class Evento implements Comparable<Evento>
     this.codigoEstacao = codigoEstacao;
   }
 
-  @Override
   public int compareTo(Evento e)
   {
 	if (this.tempoExecucao < e.getTempoExecucao())
