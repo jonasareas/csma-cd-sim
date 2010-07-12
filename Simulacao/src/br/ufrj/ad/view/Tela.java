@@ -16,6 +16,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
@@ -62,6 +64,13 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
   private JCheckBox jCheck4;
   private JButton jButtonCenarioGenerico;  
   
+  private JPanel jPanelGrafico;
+  private JLabel jLabelLog;
+  private JTextArea jTextLog;
+  private JScrollPane scrollTextArea;
+  private JButton jButtonEstatisticas; 
+  JFrame grafico;
+  
   private boolean check1 = false;
   private boolean check2 = false;
   private boolean check3 = false;
@@ -79,6 +88,9 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jContentPane = new JPanel();
     FlowLayout jContentPaneLayout = new FlowLayout();
     getContentPane().add(jContentPane, BorderLayout.CENTER);
+    setResizable(false);
+    setTitle("Trabalho de Avaliacao e Desempenho - Simulacao");
+    
     jContentPane.setLayout(jContentPaneLayout);
 
     jPanelTitulo = new JPanel();
@@ -86,6 +98,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jPanelTitulo.setBorder(BorderFactory.createTitledBorder(""));
     jPanelTitulo.setBackground(new java.awt.Color(207,213,215));
     jContentPane.add(jPanelTitulo);
+   
     
     jLabelTitulo = new JLabel();
     jLabelTitulo.setText("Trabalho de Avaliação e Desempenho - Simulação");
@@ -94,8 +107,12 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
 
     jPanelCenarios = new JPanel();
     jPanelCenarios.setPreferredSize(new java.awt.Dimension(790, 515));
-    jPanelCenarios.setLayout(null);
+    jPanelCenarios.setLayout(null);    
     jContentPane.add(jPanelCenarios);
+    
+
+    
+
     
     jLabelTempoSimulacao = new JLabel();
     jLabelTempoSimulacao.setText("Tempo a ser simulado (em segundos):");
@@ -109,11 +126,44 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jPanelCenarios.add(jTextTempoSimulacao);
     
     jPanelCenarios.add(getJPanelCenariosFixos());
-    jPanelCenarios.add(getJPanelCenarioGenerico());         
+    jPanelCenarios.add(getJPanelCenarioGenerico());  
+    jPanelCenarios.add(getJPanelGrafico());
     
     this.setSize(800, 600);
     this.setName("Simulacao");
   }
+  
+  private JPanel getJPanelGrafico() 
+  {
+	jPanelGrafico = new JPanel();
+	jPanelGrafico.setLayout(null);
+	jPanelGrafico.setBounds(50, 320, 700, 180);
+	jPanelGrafico.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
+	
+	jLabelLog = new JLabel();
+	jLabelLog.setText("Ocorrencias (Log):");
+	jLabelLog.setFont(new java.awt.Font("Dialog",1,18));
+	jLabelLog.setBounds(250, 10, 165, 25);
+	jPanelGrafico.add(jLabelLog);
+	
+	jTextLog = new JTextArea("Log da Simulacao:");
+	scrollTextArea = new JScrollPane(jTextLog);
+	scrollTextArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+	scrollTextArea.setBounds(20,40,530,120);
+	
+	jPanelGrafico.add(scrollTextArea);
+	
+	jButtonEstatisticas = new JButton();
+	jButtonEstatisticas.setBounds(555, 80, 130, 25);
+	jButtonEstatisticas.setEnabled(true);
+	jButtonEstatisticas.setText("Exibir Grafico");
+	jButtonEstatisticas.addActionListener(this);  
+	jButtonEstatisticas.setEnabled(false);
+	jPanelGrafico.add(jButtonEstatisticas);
+    return jPanelGrafico;
+  }
+  
+  
   
   private JPanel getJPanelCenariosFixos() 
   {
@@ -331,38 +381,59 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     ConfiguracaoPc config2 = null;
     ConfiguracaoPc config3 = null;
     ConfiguracaoPc config4 = null;
+    boolean simula = false;
     if (e.getSource().equals(jButtonCenario1)) {
       config1 = new ConfiguracaoPc(1, 100, 40, 80, true);
       config2 = new ConfiguracaoPc(2, 80, 40, 80, true);
       config3 = new ConfiguracaoPc(3, 60, 0, 0, false);
-      config4 = new ConfiguracaoPc(4, 40, 0, 0, false);   
+      config4 = new ConfiguracaoPc(4, 40, 0, 0, false);  
+      simula = true;
     } else if (e.getSource().equals(jButtonCenario2)) {
       config1 = new ConfiguracaoPc(1, 100, 40, 80, false);
       config2 = new ConfiguracaoPc(2, 80, 40, 80, false);
       config3 = new ConfiguracaoPc(3, 60, 0, 0, false);
       config4 = new ConfiguracaoPc(4, 40, 0, 0, false);   
+      simula = true;
     } else if (e.getSource().equals(jButtonCenario3)) {
       config1 = new ConfiguracaoPc(1, 100, 40, 80, true);
       config2 = new ConfiguracaoPc(2, 80, 1, 16, true);
       config3 = new ConfiguracaoPc(3, 60, 1, 16, true);
-      config4 = new ConfiguracaoPc(4, 40, 1, 16, true);   
+      config4 = new ConfiguracaoPc(4, 40, 1, 16, true);
+      simula = true;
     } else if (e.getSource().equals(jButtonCenario4)) {
       config1 = new ConfiguracaoPc(1, 100, 40, 80, true);
       config2 = new ConfiguracaoPc(2, 80, 1, 16, false);
       config3 = new ConfiguracaoPc(3, 60, 1, 16, false);
-      config4 = new ConfiguracaoPc(4, 40, 1, 16, false);   
+      config4 = new ConfiguracaoPc(4, 40, 1, 16, false);
+      simula = true;
     } else if (e.getSource().equals(jButtonCenarioGenerico)) {
       config1 = new ConfiguracaoPc(1, 100, trataDouble(jText1P.getText()), trataDouble(jText1A.getText()), check1);
       config2 = new ConfiguracaoPc(2, 80, trataDouble(jText2P.getText()), trataDouble(jText2A.getText()), check2);
       config3 = new ConfiguracaoPc(3, 60, trataDouble(jText3P.getText()), trataDouble(jText3A.getText()), check3);
-      config4 = new ConfiguracaoPc(4, 40, trataDouble(jText4P.getText()), trataDouble(jText4A.getText()), check4);     
+      config4 = new ConfiguracaoPc(4, 40, trataDouble(jText4P.getText()), trataDouble(jText4A.getText()), check4); 
+      simula = true;
       
       System.out.println("[LOG] Parâmetros da Estação 1: " + trataDouble(jText1P.getText()) + " " +  trataDouble(jText1A.getText()) + " " +  check1);
       System.out.println("[LOG] Parâmetros da Estação 2: " + trataDouble(jText2P.getText()) + " " +  trataDouble(jText2A.getText()) + " " +  check2);
       System.out.println("[LOG] Parâmetros da Estação 3: " + trataDouble(jText3P.getText()) + " " +  trataDouble(jText3A.getText()) + " " +  check3);
       System.out.println("[LOG] Parâmetros da Estação 4: " + trataDouble(jText4P.getText()) + " " +  trataDouble(jText4A.getText()) + " " +  check4);
+    } else if (e.getSource().equals(jButtonEstatisticas)) {
+    	
+    	
+    	grafico = new JFrame("Grafico");  
+    	grafico.setSize(640, 480);
+    	grafico.setResizable(false);
+    	grafico.getContentPane().add(CriaGrafico.getGrafico2());  
+    	grafico.setVisible(true);  
+    	
+    	 simula = false;
     }
-    configuraSimulacao(config1, config2, config3, config4);     
+    
+    if(simula)
+    {
+    	configuraSimulacao(config1, config2, config3, config4);
+    	jButtonEstatisticas.setEnabled(true);
+    }
   }
   
   private double trataDouble(String texto)
