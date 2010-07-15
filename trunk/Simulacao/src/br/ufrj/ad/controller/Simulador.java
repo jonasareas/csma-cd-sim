@@ -65,7 +65,8 @@ public class Simulador
         programaChegadaNaFila(ParametroA.geraParametro(estacao.getA(), estacao.isDeterministico()), estacao.getCodigo()); 
       }
     }
-    acumulador = AcumuladorEstatistico.getInstancia(i);
+    acumulador = AcumuladorEstatistico.getInstancia();
+    acumulador.clear(i);
     codigoRodada = 0;
     simula(tempoRodada, numeroRodadas);
   }
@@ -169,8 +170,12 @@ public class Simulador
     programaChegadaNaFila(proximoTempo, estacao.getCodigo());
 
     // Realiza a chegada na fila
+    if(evento.getTempoExecucao() > 436.60039999999947)
+    {
+      int x = 4;
+    }
     Mensagem mensagem = new Mensagem(ParametroP.geraParametro(estacao.getP()), codigoRodada);
-    if (estacao.isFilaVazia())
+    if (estacao.isFilaVazia() && !(estacao.isEsperandoBackoff() || estacao.isEsperandoTempoSeguranca()))
     {
       Evento novoEvento = new Evento(TipoEvento.TentativaEnvio, evento.getTempoExecucao(), estacao.getCodigo());
       listaEventos.add(novoEvento);
@@ -334,6 +339,7 @@ public class Simulador
       {
         if (!estacao.isEsperandoBackoff())
         {
+          estacao.setEsperandoTempoSeguranca(true);
           Evento fimEspera = new Evento(TipoEvento.FimEspera, evento.getTempoExecucao() + TEMPO_ENTRE_TRANSMISSOES, evento.getCodigoEstacao());
           listaEventos.add(fimEspera);
         }
@@ -390,12 +396,10 @@ public class Simulador
       estacao.descartaPacote(evento.getTempoExecucao(), codigoRodada);
     else
     {
+      estacao.setEsperandoBackoff(true);
       tempoEspera += evento.getTempoExecucao();
-
       Evento esperaBackOff = new Evento(TipoEvento.FimBackOff, tempoEspera, estacao.getCodigo());
       listaEventos.add(esperaBackOff);
-
-      estacao.setEsperandoBackoff(true);
     }
 
   }
