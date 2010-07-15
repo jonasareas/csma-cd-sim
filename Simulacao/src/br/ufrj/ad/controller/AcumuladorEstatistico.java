@@ -28,17 +28,12 @@ public class AcumuladorEstatistico
   
   public static AcumuladorEstatistico getInstancia()
   {
-    return instancia;
-  }
- 
-  public static AcumuladorEstatistico getInstancia(int numeroEstacoes)
-  {
     if(instancia == null)
-      instancia = new AcumuladorEstatistico(numeroEstacoes);
+      instancia = new AcumuladorEstatistico();
     
     return instancia;
   }
-  
+   
   private AcumuladorEstatistico() {}
   
   private AcumuladorEstatistico(int numeroEstacoes)
@@ -207,5 +202,26 @@ public class AcumuladorEstatistico
     System.out.println("   E[Ncmi]   = " + media(ncmi));
     System.out.println("   VAR[Ncmi] = " + var(ncmi));
     System.out.println("");
+  }
+  
+  public void clear(int numeroEstacoes)
+  {
+    vazao = new ArrayList< ArrayList<Double> > ();
+    for(int i = 0; i < numeroEstacoes; i++)
+    {
+       vazao.add(new ArrayList<Double>());
+    }
+    
+    this.transiente = true;
+    
+    tapi = new ArrayList<Double>();
+    tami = new ArrayList<Double>();
+    ncmi = new ArrayList<Double>();
+    
+    tap = new ArrayList<Double>();
+    tam = new ArrayList<Double>();
+    ncm = new ArrayList<Double>();
+    
+    utilizacaoEthernet = new ArrayList<Double>(); 
   }
 }
