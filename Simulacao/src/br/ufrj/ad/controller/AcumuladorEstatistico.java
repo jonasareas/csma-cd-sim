@@ -2,6 +2,8 @@ package br.ufrj.ad.controller;
 
 import java.util.ArrayList;
 
+import br.ufrj.ad.view.Tela;
+
 public class AcumuladorEstatistico
 {
   private static final double VAR_MAX_TAP = 1000.000000001;
@@ -81,6 +83,7 @@ public class AcumuladorEstatistico
       {
         transiente = false;
         System.out.println("Fim Fase Transiente");
+        Tela.jTextLog.append("Fim Fase Transiente\n");
       }
       reinicia();
       return;
@@ -202,6 +205,22 @@ public class AcumuladorEstatistico
     System.out.println("   E[Ncmi]   = " + media(ncmi));
     System.out.println("   VAR[Ncmi] = " + var(ncmi));
     System.out.println("");
+    
+    Tela.jTextLog.append("Dados de Tapi:\n");
+    Tela.jTextLog.append("   N        = " + tapi.size() + "\n");
+    Tela.jTextLog.append("   E[Tap]   = " + media(tapi) + "\n");
+    Tela.jTextLog.append("   VAR[Tap] = " + var(tapi) + "\n\n");
+    
+    Tela.jTextLog.append("Dados de Tami:\n");
+    Tela.jTextLog.append("   N        = " + tami.size() + "\n");
+    Tela.jTextLog.append("   E[Tam]   = " + media(tami) + "\n");
+    Tela.jTextLog.append("   VAR[Tam] = " + var(tami) + "\n\n");
+    
+    Tela.jTextLog.append("Dados de Ncmi:\n");
+    Tela.jTextLog.append("   N        = " + ncmi.size() + "\n");
+    Tela.jTextLog.append("   E[Tam]   = " + media(ncmi) + "\n");
+    Tela.jTextLog.append("   VAR[Tam] = " + var(ncmi) + "\n\n");
+    
   }
   
   public void clear(int numeroEstacoes)
