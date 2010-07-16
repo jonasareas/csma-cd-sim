@@ -12,6 +12,7 @@ import br.ufrj.ad.model.Quadro;
 import br.ufrj.ad.parametros.ParametroA;
 import br.ufrj.ad.parametros.ParametroP;
 import br.ufrj.ad.util.BinaryBackoff;
+import br.ufrj.ad.view.Tela;
 
 public class Simulador
 {
@@ -104,6 +105,7 @@ public class Simulador
       }else
       {
         System.out.println("Final da rodada " + codigoRodada );
+        Tela.jTextLog.append("Final da rodada " + codigoRodada + "\n");
         codigoRodada++;
       }
       acumulador.fimRodada(pc1.extraiUtilizacao(), vz);
