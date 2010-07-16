@@ -66,7 +66,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
   
   private JPanel jPanelGrafico;
   private JLabel jLabelLog;
-  private JTextArea jTextLog;
+  public static JTextArea jTextLog;
   private JScrollPane scrollTextArea;
   private JButton jButtonEstatisticas; 
   JFrame grafico;
@@ -331,7 +331,12 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     Simulador simulador = new Simulador();
     double tempoSimulacao = trataDouble(jTextTempoSimulacao.getText()) * 1000; // Passando para milisegundos.
     
-    System.out.println("[LOG] Tempo de Simulação:" + tempoSimulacao);
+    System.out.println("[LOG] Tempo de Simulacaoo:" + tempoSimulacao);
+    
+
+    jTextLog.append("[LOG] Tempo de Simulacaoo:" + tempoSimulacao + "\n");
+  
+    
     
     ArrayList<ConfiguracaoPc> parametros = new ArrayList<ConfiguracaoPc>();
     parametros.add(config1);
@@ -382,6 +387,9 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     ConfiguracaoPc config3 = null;
     ConfiguracaoPc config4 = null;
     boolean simula = false;
+    
+    jTextLog.setText("");
+    
     if (e.getSource().equals(jButtonCenario1)) {
       config1 = new ConfiguracaoPc(1, 100, 40, 80, true);
       config2 = new ConfiguracaoPc(2, 80, 40, 80, true);
@@ -413,10 +421,16 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
       config4 = new ConfiguracaoPc(4, 40, trataDouble(jText4P.getText()), trataDouble(jText4A.getText()), check4); 
       simula = true;
       
-      System.out.println("[LOG] Parâmetros da Estação 1: " + trataDouble(jText1P.getText()) + " " +  trataDouble(jText1A.getText()) + " " +  check1);
-      System.out.println("[LOG] Parâmetros da Estação 2: " + trataDouble(jText2P.getText()) + " " +  trataDouble(jText2A.getText()) + " " +  check2);
-      System.out.println("[LOG] Parâmetros da Estação 3: " + trataDouble(jText3P.getText()) + " " +  trataDouble(jText3A.getText()) + " " +  check3);
-      System.out.println("[LOG] Parâmetros da Estação 4: " + trataDouble(jText4P.getText()) + " " +  trataDouble(jText4A.getText()) + " " +  check4);
+      System.out.println("[LOG] Parametros da Estacao 1: " + trataDouble(jText1P.getText()) + " " +  trataDouble(jText1A.getText()) + " " +  check1);
+      System.out.println("[LOG] Parametros da Estacao 2: " + trataDouble(jText2P.getText()) + " " +  trataDouble(jText2A.getText()) + " " +  check2);
+      System.out.println("[LOG] Parametros da Estacao 3: " + trataDouble(jText3P.getText()) + " " +  trataDouble(jText3A.getText()) + " " +  check3);
+      System.out.println("[LOG] Parametros da Estacao 4: " + trataDouble(jText4P.getText()) + " " +  trataDouble(jText4A.getText()) + " " +  check4);
+      
+      jTextLog.append("[LOG] Parametros da Estacao 1: " + trataDouble(jText1P.getText()) + " " +  trataDouble(jText1A.getText()) + " " +  check1 + "\n");
+      jTextLog.append("[LOG] Parametros da Estacao 2: " + trataDouble(jText2P.getText()) + " " +  trataDouble(jText2A.getText()) + " " +  check2+ "\n");
+      jTextLog.append("[LOG] Parametros da Estacao 3: " + trataDouble(jText3P.getText()) + " " +  trataDouble(jText3A.getText()) + " " +  check3+ "\n");
+      jTextLog.append("[LOG] Parametros da Estacao 4: " + trataDouble(jText4P.getText()) + " " +  trataDouble(jText4A.getText()) + " " +  check4+ "\n");
+      
     } else if (e.getSource().equals(jButtonEstatisticas)) {
     	
     	
@@ -434,6 +448,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     	configuraSimulacao(config1, config2, config3, config4);
     	jButtonEstatisticas.setEnabled(true);
     }
+    jTextLog.select(0, 0);
   }
   
   private double trataDouble(String texto)
