@@ -4,9 +4,9 @@ public class Mensagem
 {
   public static final int TAMANHO_QUADRO = 1000; // Em bytes
 
-  private int             quantidadeQuadros;    // Quantidade restante de quadros a serem enviados
+  private int             quantidadeQuadros;     // Quantidade restante de quadros a serem enviados
 
-  private int             totalQuadros;         // Total de quadros da mensagem
+  private int             totalQuadros;          // Total de quadros da mensagem
 
   private Quadro          quadro         = null;
 
@@ -14,7 +14,7 @@ public class Mensagem
 
   private int             totalColisoes;
   
-  private int             codigoRodadaEntrada;
+  private int             codigoRodadaEntrada; //TODO: Pra que precisa disso aqui?
 
   public Mensagem(int tamanho,int codigoRodadaEntrada)
   {
@@ -65,12 +65,17 @@ public class Mensagem
     return tempoInicialAcesso;
   }
 
-  /*
-   * public int getTotalQuadros() { return totalQuadros; } public int
-   * getTotalColisoes() { return totalColisoes; }
-   */
+  public int getTotalQuadros() 
+  { 
+    return totalQuadros; 
+  }
+  
+  public int getTotalColisoes() 
+  { 
+    return totalColisoes; 
+  }
 
-  // informacao pedida
+  // Informacao pedida
   public double colisoesPorQuadro()
   {
     return (double) (totalColisoes) / (double) (totalQuadros);

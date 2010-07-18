@@ -6,6 +6,7 @@ import br.ufrj.ad.view.Tela;
 
 public class AcumuladorEstatistico
 {
+  // TODO: Que valores são esses?????
   private static final double VAR_MAX_TAP = 1000.000000001;
   private static final double VAR_MAX_TAM = 1000.000001;
   private static final double VAR_MAX_NCM = 1000.00000001;
@@ -27,12 +28,10 @@ public class AcumuladorEstatistico
   
   private boolean transiente;
   
-  
   public static AcumuladorEstatistico getInstancia()
   {
     if(instancia == null)
       instancia = new AcumuladorEstatistico();
-    
     return instancia;
   }
    
@@ -40,23 +39,7 @@ public class AcumuladorEstatistico
   
   private AcumuladorEstatistico(int numeroEstacoes)
   {
-    vazao = new ArrayList< ArrayList<Double> > ();
-    for(int i = 0; i < numeroEstacoes; i++)
-    {
-       vazao.add(new ArrayList<Double>());
-    }
-    
-    this.transiente = true;
-    
-    tapi = new ArrayList<Double>();
-    tami = new ArrayList<Double>();
-    ncmi = new ArrayList<Double>();
-    
-    tap = new ArrayList<Double>();
-    tam = new ArrayList<Double>();
-    ncm = new ArrayList<Double>();
-    
-    utilizacaoEthernet = new ArrayList<Double>();   
+    clear(numeroEstacoes);
   }
   
   private void reinicia()
@@ -67,12 +50,10 @@ public class AcumuladorEstatistico
     
     utilizacaoEthernet.clear();
     
-    
     for(ArrayList<Double> a : vazao)
     {
       a.clear();
     }
-    
   }
   
   public void fimRodada(double utilizacao, ArrayList<Double> vazao)
@@ -82,20 +63,17 @@ public class AcumuladorEstatistico
       if(!verificaTransiencia())
       {
         transiente = false;
-        System.out.println("Fim Fase Transiente");
-        Tela.jTextLog.append("Fim Fase Transiente\n");
+        Tela.jTextLog.append("Fim da Fase Transiente\n");
       }
       reinicia();
       return;
     }
-    
     
     if(tap.size()>0)
     {
       tapi.add(media(tap));
       tap.clear();
     }
-    
     
     if(tam.size()>0)
     {
@@ -114,7 +92,6 @@ public class AcumuladorEstatistico
     for(int i = 0; i < vazao.size(); i++)
     {
       this.vazao.get(i).add(vazao.get(i));
-      
     }
   }
   
@@ -135,9 +112,9 @@ public class AcumuladorEstatistico
   
   private boolean verificaTransiencia()
   {
-    double varTap = var(tap);
-    double varTam = var(tam);
-    double varNcm = var(ncm);
+    double varTap = variancia(tap);
+    double varTam = variancia(tam);
+    double varNcm = variancia(ncm);
     
     /*
     System.out.println("Analize Transiencia:");
@@ -152,7 +129,7 @@ public class AcumuladorEstatistico
     return false;
   }
   
-  private double var(ArrayList<Double> list)
+  private double variancia(ArrayList<Double> list)
   {
     if(list.size() <= 1)
       return -1;
@@ -177,7 +154,6 @@ public class AcumuladorEstatistico
     {
       sum += d;
     }
-    
     return sum/list.size();
   }
   
@@ -185,42 +161,23 @@ public class AcumuladorEstatistico
   {
     return transiente;
   }
-  
+  //TODO: Não deveria ser para cada estação?
   public void extraiEstatistica()
   {
-    System.out.println("Dados de Tapi:");
-    System.out.println("   N        = " + tapi.size());
-    System.out.println("   E[Tap]   = " + media(tapi));
-    System.out.println("   VAR[Tap] = " + var(tapi));
-    System.out.println("");
-    
-    System.out.println("Dados de Tami:");
-    System.out.println("   N        = " + tami.size());
-    System.out.println("   E[Tam]   = " + media(tami));
-    System.out.println("   VAR[Tam] = " + var(tami));
-    System.out.println("");
-    
-    System.out.println("Dados de Ncmi:");
-    System.out.println("   N        = " + ncmi.size());
-    System.out.println("   E[Ncmi]   = " + media(ncmi));
-    System.out.println("   VAR[Ncmi] = " + var(ncmi));
-    System.out.println("");
-    
     Tela.jTextLog.append("Dados de Tapi:\n");
     Tela.jTextLog.append("   N        = " + tapi.size() + "\n");
     Tela.jTextLog.append("   E[Tap]   = " + media(tapi) + "\n");
-    Tela.jTextLog.append("   VAR[Tap] = " + var(tapi) + "\n\n");
+    Tela.jTextLog.append("   VAR[Tap] = " + variancia(tapi) + "\n\n");
     
     Tela.jTextLog.append("Dados de Tami:\n");
     Tela.jTextLog.append("   N        = " + tami.size() + "\n");
     Tela.jTextLog.append("   E[Tam]   = " + media(tami) + "\n");
-    Tela.jTextLog.append("   VAR[Tam] = " + var(tami) + "\n\n");
+    Tela.jTextLog.append("   VAR[Tam] = " + variancia(tami) + "\n\n");
     
     Tela.jTextLog.append("Dados de Ncmi:\n");
     Tela.jTextLog.append("   N        = " + ncmi.size() + "\n");
     Tela.jTextLog.append("   E[Tam]   = " + media(ncmi) + "\n");
-    Tela.jTextLog.append("   VAR[Tam] = " + var(ncmi) + "\n\n");
-    
+    Tela.jTextLog.append("   VAR[Tam] = " + variancia(ncmi) + "\n\n");
   }
   
   public void clear(int numeroEstacoes)

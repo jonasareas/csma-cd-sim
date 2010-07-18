@@ -8,9 +8,7 @@ public class Exponencial
 
   public static double geraAmostraExponencial(double a)
   {
-    double numeroGerado = (-(log(MyRandom.rand()) / (1 / a)));
-    //System.out.println("[LOG] Tempo da próxima chegada: " + numeroGerado);
-    return numeroGerado;
+    return (-(log(MyRandom.rand()) / (1 / a)));
   }
   
 }

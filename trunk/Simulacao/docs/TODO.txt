@@ -30,7 +30,6 @@ Cenário 4: (p deterministico, A1 determinístico e A234 exponencial)
 - Tempo entre chegadas no PC (A) - A1 = 80 ms A2 = A3 = A4 = 16 ms
   - Tipo de chegada - 1 Determinístico 2, 3 e 4 Exponenciais
 
-
 Envio de Mensagem:
 SenteMeio()
 Se Livre
@@ -44,7 +43,6 @@ MeioLivre():
 	Se Passou
 		IniciaEnvio()
 		VerificaColisao()
-
 	Senão
 		Wait()
 		IniciaEnvio()
@@ -83,33 +81,6 @@ NCm(i)= número médio de colisões por quadro na estação i
 - Utilização do Ethernet -> tempo que o meio está ocupado com alguma transmissão (quadro com sucesso, ou colisão ou reforço de colisão) dividio pelo tempo 	total de simulação, desprezando o tempo da fase transiente. A utilização deve ser medida na estação 1 para referência.
 
 ==> intervalos de confiança de 95%. O intervalo de confiança não deverá ser superior a 10% do valor estimado, ou seja, U(α) - L(α) < 0,10 μ.
-
-VER ITEM 5
-
-
-
-
-TESTES DE CORRECAO:
-Uma estação transmitindo - 1 quadro
-Estação 1 transmitindo - 1 quadro - 100 ms D - durante 0.5s
-Estação 1 transmitindo - 1 quadro - 100 ms E - durante 0.5s (sem chegadas entre o ciclo)
-Estação 1 transmitindo - 1 quadro - 10 ms E - durante 0.5s (chegadas entre o ciclo)
-
-UMA ESACAO - TODOS OS CASOS - OK
-
-FIM DE ESPERA == MEIO OCUPADO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-14.804617233839423: Chegada na Fila de 1
-14.804617233839423: Tentativa de Envio de 1
-14.805317233839423: Meio ocupado em 4
-14.805417233839423: Meio ocupado em 3
-14.805517233839423: Meio ocupado em 2
-15.604617233839424: Fim de transmissao de 1
-15.605317233839424: Meio Livre em 4
-15.605417233839423: Meio Livre em 3
-15.605517233839423: Meio Livre em 2
-15.614217233839424: Fim de espera de 1
-
 
 RESOLVER:
 1 - Todas as estações, inclusive a que transmitiu, irão receber em seu rx o sinal retransmitido, após o atraso de propagação devido.

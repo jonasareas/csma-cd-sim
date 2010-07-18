@@ -12,7 +12,6 @@ public class Geometrica
     while (numeroGerado == 0) {
       numeroGerado = (int) ((log(MyRandom.rand()) / log(1 - p)) + 0.5);
     }
-    System.out.println("[LOG] Número de quadros: " + numeroGerado);
     return numeroGerado;
   }
 

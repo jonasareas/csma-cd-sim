@@ -1,7 +1,5 @@
 package br.ufrj.ad.view;
 
-import javax.swing.JPanel;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -18,10 +16,10 @@ public class CriaGrafico {
 	public static ChartPanel getGrafico(){
 		
 		JFreeChart chart = ChartFactory.createTimeSeriesChart
-		                     ("produção de leite", // titulo do grafico
+		                     ("produï¿½ï¿½o de leite", // titulo do grafico
 		                      "meses",             // eixo X
 		                      "litros",            // eixo Y
-		                      createDataset(),     // dados para o gráfico
+		                      createDataset(),     // dados para o grï¿½fico
 		                      true,true,false);	   // exibir: legendas, tooltips, url
 		                      
 		                      
@@ -44,7 +42,7 @@ public class CriaGrafico {
 	        s1.add(new Month(5, 2005), 167.6);
 	        s1.add(new Month(6, 2005), 158.8);
 
-//	        TimeSeries s2 = new TimeSeries("Frísias", Month.class);
+//	        TimeSeries s2 = new TimeSeries("Frï¿½sias", Month.class);
 //	        s2.add(new Month(1, 2005), 129.6);
 //	        s2.add(new Month(2, 2005), 129.6);
 //	        s2.add(new Month(3, 2005), 123.2);
@@ -77,8 +75,8 @@ public class CriaGrafico {
 
 	  private static JFreeChart createBarChart(CategoryDataset dataset) {
 		  JFreeChart chart = ChartFactory.createBarChart(
-		  "Escolha de cor por veículo", //Titulo
-		  "Veículo", // Eixo X
+		  "Escolha de cor por veï¿½culo", //Titulo
+		  "Veï¿½culo", // Eixo X
 		  "Quantidade", //Eixo Y
 		  dataset, // Dados para o grafico
 		  PlotOrientation.VERTICAL, //Orientacao do grafico
