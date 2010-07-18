@@ -56,7 +56,8 @@ public class Evento implements Comparable<Evento>
     return 0;
   }
   
-  @Override public boolean equals(Object obj)
+  @Override 
+  public boolean equals(Object obj)
   {
 	  if(obj == null)
 		  return false;

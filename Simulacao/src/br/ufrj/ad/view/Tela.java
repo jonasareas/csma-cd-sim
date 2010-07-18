@@ -66,10 +66,11 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
   
   private JPanel jPanelGrafico;
   private JLabel jLabelLog;
-  public static JTextArea jTextLog;
   private JScrollPane scrollTextArea;
   private JButton jButtonEstatisticas; 
-  JFrame grafico;
+  private JFrame grafico;
+  
+  public static JTextArea jTextLog;  
   
   private boolean check1 = false;
   private boolean check2 = false;
@@ -89,7 +90,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     FlowLayout jContentPaneLayout = new FlowLayout();
     getContentPane().add(jContentPane, BorderLayout.CENTER);
     setResizable(false);
-    setTitle("Trabalho de Avaliacao e Desempenho - Simulacao");
+    setTitle("Trabalho de Avaliacao e Desempenho - Simulacao CSMA/CD");
     
     jContentPane.setLayout(jContentPaneLayout);
 
@@ -98,10 +99,9 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jPanelTitulo.setBorder(BorderFactory.createTitledBorder(""));
     jPanelTitulo.setBackground(new java.awt.Color(207,213,215));
     jContentPane.add(jPanelTitulo);
-   
     
     jLabelTitulo = new JLabel();
-    jLabelTitulo.setText("Trabalho de Avaliação e Desempenho - Simulação");
+    jLabelTitulo.setText("Trabalho de Avaliação e Desempenho - Simulação CSMA/CD");
     jLabelTitulo.setFont(new java.awt.Font("Dialog",3,24));
     jPanelTitulo.add(jLabelTitulo);
 
@@ -109,11 +109,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jPanelCenarios.setPreferredSize(new java.awt.Dimension(790, 515));
     jPanelCenarios.setLayout(null);    
     jContentPane.add(jPanelCenarios);
-    
 
-    
-
-    
     jLabelTempoSimulacao = new JLabel();
     jLabelTempoSimulacao.setText("Tempo a ser simulado (em segundos):");
     jLabelTempoSimulacao.setFont(new java.awt.Font("Dialog",1,18));
@@ -141,9 +137,9 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
 	jPanelGrafico.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 	
 	jLabelLog = new JLabel();
-	jLabelLog.setText("Ocorrencias (Log):");
+	jLabelLog.setText("Ocorrências (Log):");
 	jLabelLog.setFont(new java.awt.Font("Dialog",1,18));
-	jLabelLog.setBounds(250, 10, 165, 25);
+	jLabelLog.setBounds(250, 10, 200, 25);
 	jPanelGrafico.add(jLabelLog);
 	
 	jTextLog = new JTextArea("Log da Simulacao:");
@@ -162,8 +158,6 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
 	jPanelGrafico.add(jButtonEstatisticas);
     return jPanelGrafico;
   }
-  
-  
   
   private JPanel getJPanelCenariosFixos() 
   {
@@ -331,20 +325,15 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     Simulador simulador = new Simulador();
     double tempoSimulacao = trataDouble(jTextTempoSimulacao.getText()) * 1000; // Passando para milisegundos.
     
-    System.out.println("[LOG] Tempo de Simulacaoo:" + tempoSimulacao);
-    
-
-    jTextLog.append("[LOG] Tempo de Simulacaoo:" + tempoSimulacao + "\n");
+    jTextLog.append("[LOG] Tempo de Simulação:" + tempoSimulacao + "\n");
   
-    
-    
     ArrayList<ConfiguracaoPc> parametros = new ArrayList<ConfiguracaoPc>();
     parametros.add(config1);
     parametros.add(config2);
     parametros.add(config3);
     parametros.add(config4);
 
-    simulador.iniciaSimulacao(tempoSimulacao, 30, parametros, 1); 
+    simulador.iniciaSimulacao(tempoSimulacao, 1, parametros, 1); 
   }
   
   public void itemStateChanged(ItemEvent e) {
@@ -421,26 +410,18 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
       config4 = new ConfiguracaoPc(4, 40, trataDouble(jText4P.getText()), trataDouble(jText4A.getText()), check4); 
       simula = true;
       
-      System.out.println("[LOG] Parametros da Estacao 1: " + trataDouble(jText1P.getText()) + " " +  trataDouble(jText1A.getText()) + " " +  check1);
-      System.out.println("[LOG] Parametros da Estacao 2: " + trataDouble(jText2P.getText()) + " " +  trataDouble(jText2A.getText()) + " " +  check2);
-      System.out.println("[LOG] Parametros da Estacao 3: " + trataDouble(jText3P.getText()) + " " +  trataDouble(jText3A.getText()) + " " +  check3);
-      System.out.println("[LOG] Parametros da Estacao 4: " + trataDouble(jText4P.getText()) + " " +  trataDouble(jText4A.getText()) + " " +  check4);
-      
       jTextLog.append("[LOG] Parametros da Estacao 1: " + trataDouble(jText1P.getText()) + " " +  trataDouble(jText1A.getText()) + " " +  check1 + "\n");
       jTextLog.append("[LOG] Parametros da Estacao 2: " + trataDouble(jText2P.getText()) + " " +  trataDouble(jText2A.getText()) + " " +  check2+ "\n");
       jTextLog.append("[LOG] Parametros da Estacao 3: " + trataDouble(jText3P.getText()) + " " +  trataDouble(jText3A.getText()) + " " +  check3+ "\n");
       jTextLog.append("[LOG] Parametros da Estacao 4: " + trataDouble(jText4P.getText()) + " " +  trataDouble(jText4A.getText()) + " " +  check4+ "\n");
       
     } else if (e.getSource().equals(jButtonEstatisticas)) {
-    	
-    	
     	grafico = new JFrame("Grafico");  
     	grafico.setSize(640, 480);
     	grafico.setResizable(false);
     	grafico.getContentPane().add(CriaGrafico.getGrafico2());  
     	grafico.setVisible(true);  
-    	
-    	 simula = false;
+    	simula = false;
     }
     
     if(simula)
