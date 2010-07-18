@@ -199,12 +199,14 @@ public class Simulador
 
     Mensagem msg = estacao.getMensagem();
     
-    // TODO: ESTÁ ERRADO!!!!!!!!! Temos que preocessar o envio para CADA quadro da mensagem!!!!!!
+    // ESTAH ERRADO!!!!!!!!! Temos que preocessar o envio para CADA quadro da mensagem!!!!!!
     // Não quero consertar agora, primeiro pq to com sono e vou acabar fazendo merda, segundo por que preciso que o Armando veja e confirme
     // que isso de fato está errado, e também qual é o melhor jeito para resolver.
-    
     // Para comprovar que está errado, rode o simulador com A = 100, Deterministico, e primeiro P = 1, depois P = 100 (em 100.8 mostra que
-    // todos os quadros já forma enviados, o que só é verdade se a mensagem só tiver 1 quadro!)
+    // todos os quadros jah forma enviados, o que soh verdade se a mensagem soh tiver 1 quadro!)
+    
+    // RESOLVIDO: o erro foi inserido na ultima revisao! Ele estava na troca (getFirst -> removeFirst) da linha 159 da Classe Estacao. 
+    // e na remocao da linha 184 da mesma Classe que eh o removeFirst que esta CONDICIONADO ao if
     Quadro qd = msg.getQuadro();
 
     if (msg.getTempoInicialAcesso() == 0.0)

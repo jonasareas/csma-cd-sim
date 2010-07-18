@@ -156,7 +156,7 @@ public class Estacao
   {
     AcumuladorEstatistico ac = AcumuladorEstatistico.getInstancia();
     
-    Mensagem msg = listaMensagens.removeFirst();
+    Mensagem msg = listaMensagens.getFirst();
     
     // Informacao pedida
     if(msg.getCodigoRodadaEntrada() == codigoRodada)
@@ -181,6 +181,7 @@ public class Estacao
         ac.addTam(fim - msg.getTempoInicialAcesso());
         ac.addNcm(msg.colisoesPorQuadro());
       }
+      listaMensagens.removeFirst();
     }
   }
 
@@ -263,7 +264,12 @@ public class Estacao
     int total = 0;
     for (Mensagem m : listaMensagens)
     {
-      total += m.getTotalQuadros();
+      total += m.getQuantidadeQuadros() + 1; // Total de quadros eh a quantidade de quadros que a 
+                                             // que a mensagem recebeu para enviar. O "+1" eh pq o 
+                                             // valor quantidade de quadros, eh a quantidade de
+                                             // quantidade de quadros restantes menos 1 que eh o 
+                                             // quadro que esta na classe Quadro (proximo quadro
+                                             // da mensagem)
     }
     return total;
   }
