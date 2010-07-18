@@ -137,7 +137,7 @@ public class Simulador
         processaTentativaEnvio(evento);
         break;
       case FimTransmissao:
-        System.out.print(Double.toString(evento.getTempoExecucao()) + ": Fim de transmissao de " + evento.getCodigoEstacao());
+        System.out.print(Double.toString(evento.getTempoExecucao()) + ": Fim de transmissao de um quadro de " + evento.getCodigoEstacao());
         processaFimTransmissao(evento);
         break;
       case FimEspera:
@@ -147,11 +147,11 @@ public class Simulador
         processaFimEspera(evento);
         break;
       case MeioLivre:
-        System.out.println(evento.getTempoExecucao() + ": Percepcao de meio livre em " + evento.getCodigoEstacao());
+        System.out.println(evento.getTempoExecucao() + ": Percepcao de meio livre em " + evento.getCodigoEstacao()); 
         processaMeioLivre(evento);
         break;
       case MeioOcupado:
-        System.out.println(evento.getTempoExecucao() + ": Percepcao de meio ocupado em " + evento.getCodigoEstacao());
+        System.out.println(evento.getTempoExecucao() + ": Percepcao de meio ocupado em " + evento.getCodigoEstacao()); //TODO: Adicionar "causado por envio de <codigo>"
         processaMeioOcupado(evento);
         break;
       case FimReforcoColisao:
@@ -174,14 +174,15 @@ public class Simulador
     programaChegadaNaFila(proximoTempo, estacao.getCodigo());
 
     // Realiza a chegada na fila
-    Mensagem mensagem = new Mensagem(ParametroP.geraParametro(estacao.getP()), codigoRodada);
+    int quantidadeQuadros = ParametroP.geraParametro(estacao.getP());
+    Mensagem mensagem = new Mensagem(quantidadeQuadros, codigoRodada);
     if (estacao.isFilaVazia() && !(estacao.isEsperandoBackoff() || estacao.isEsperandoTempoSeguranca()))
     {
       Evento novoEvento = new Evento(TipoEvento.TentativaEnvio, evento.getTempoExecucao(), estacao.getCodigo());
       listaEventos.add(novoEvento);
     }
     estacao.addMensagem(mensagem);
-    System.out.println(" - Existe(m) " + buscaEstacao(evento.getCodigoEstacao()).getQuadrosNaFila() +  " quadro(s) na fila de " + evento.getCodigoEstacao());
+    System.out.println(" - Chegou uma mensagem com " + quantidadeQuadros + " quadros. Existe(m) " + buscaEstacao(evento.getCodigoEstacao()).getQuadrosNaFila() +  " quadro(s) na fila de " + evento.getCodigoEstacao());
   }
 
   private void processaTentativaEnvio(Evento evento) 
@@ -199,14 +200,6 @@ public class Simulador
 
     Mensagem msg = estacao.getMensagem();
     
-    // ESTAH ERRADO!!!!!!!!! Temos que preocessar o envio para CADA quadro da mensagem!!!!!!
-    // Não quero consertar agora, primeiro pq to com sono e vou acabar fazendo merda, segundo por que preciso que o Armando veja e confirme
-    // que isso de fato está errado, e também qual é o melhor jeito para resolver.
-    // Para comprovar que está errado, rode o simulador com A = 100, Deterministico, e primeiro P = 1, depois P = 100 (em 100.8 mostra que
-    // todos os quadros jah forma enviados, o que soh verdade se a mensagem soh tiver 1 quadro!)
-    
-    // RESOLVIDO: o erro foi inserido na ultima revisao! Ele estava na troca (getFirst -> removeFirst) da linha 159 da Classe Estacao. 
-    // e na remocao da linha 184 da mesma Classe que eh o removeFirst que esta CONDICIONADO ao if
     Quadro qd = msg.getQuadro();
 
     if (msg.getTempoInicialAcesso() == 0.0)
