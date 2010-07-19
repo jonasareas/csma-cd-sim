@@ -46,7 +46,7 @@ MeioLivre():
 	Senão
 		Wait()
 		IniciaEnvio()
-		VerificaColisao()
+		VerificaColisao() 
 
 VerificaColisao():
 	Se Colidiu
@@ -78,11 +78,62 @@ NCm(i)= número médio de colisões por quadro na estação i
 - Vazão(i) -> número de quadros transmitidos com sucesso na estação dividio tempo de simulação, DESCONSIDERANDO A FASE TRANSIENTE
     (quadros transmitidos na fase transiente não são computados e o tempo de simulação não inclui o tempo da fase transiente)
 
-- Utilização do Ethernet -> tempo que o meio está ocupado com alguma transmissão (quadro com sucesso, ou colisão ou reforço de colisão) dividio pelo tempo 	total de simulação, desprezando o tempo da fase transiente. A utilização deve ser medida na estação 1 para referência.
+- Utilização do Ethernet -> tempo que o meio está ocupado com alguma transmissão (quadro com sucesso, ou colisão ou reforço de colisão) 
+	dividio pelo tempo 	total de simulação, desprezando o tempo da fase transiente. A utilização deve ser medida na estação 1 para referência.
 
 ==> intervalos de confiança de 95%. O intervalo de confiança não deverá ser superior a 10% do valor estimado, ou seja, U(α) - L(α) < 0,10 μ.
 
 RESOLVER:
 1 - Todas as estações, inclusive a que transmitiu, irão receber em seu rx o sinal retransmitido, após o atraso de propagação devido.
 2 - Uma estação não colide consigo mesma, apesar de receber sua própria transmissão.
-3 - !!!!!!!!!!!!Um quadro é transmitido com sucesso quando não há deteção de colisão durante sua transmissão.!!!!!!!!!!!
+
+=> Não faz diferença, já que ela não colide com ela mesma.
+
+3 - Um quadro é transmitido com sucesso quando não há deteção de colisão durante sua transmissão.
+
+Uma estação só processa um quadro por vez. Um quadro é transmitido com sucesso quando não há deteção de colisão durante sua transmissão.
+=> Como tá, tá certo! Se enviou o último bit, sem perceber colisão então envio com sucesso!
+Justificativa: Para enviar com sucesso basta que eu transmita do primeiro ao ultimo bit sem colisão.
+Se eu transmiti o ultimo bit, é impossível que ele entre em colisão no meio, pois o envio de todos os bits anteriores do quadro garantem
+que ninguém mais está enviando quando eu estou enviando este último bit.
+
+
+
+
+ESTIMADOR DA MEDIA - 1.96 X RAIZ(ESTIMADOR DA VARIANCIA/ N) = L(a)
+ESTIMADOR DA MEDIA + 1.96 X RAIZ(ESTIMADOR DA VARIANCIA/ N) = U(a)
+
+
+
+
+Como definir N?
+U(a) - L(a) < 0.10 X ESTIMADOR DA MEDIA - SE PRECISO: AUMENTAR N!
+
+O que cada evento gera:
+
+UTILIZAR APOSTILA PARA ESCREVER O RELATORIO
+
+SERÁ BATCH
+
+O procedimento mais usual é colher as estatísticas e tentar obter os resultados cumulati-
+vamente ao longo do tratamento de cada evento. Os resultados méios por simulação são
+então salvos e usados conjuntamente com os resultados de outras rodadas de simulação para
+eventualmente obter os intervalos de confiança das várias medidas de interesse.
+
+!!!!!!!!!!!!Quando o sistema estiver depurado, estes pontos podem ser comentados ou retirados.!!!!!!!!!!!!!!!
+
+Coisas a consertar:
+- Forma que mensagens são exibidas no LOG da tela
+- Passar ENUM de Evento para classe Evento
+- Mudar label de tmepo de simulação
+- Tirar botão de exibição e gráfico
+- Tratar Se A vazio se P Nao for!!!!!
+- Mostrar na tela N e T
+
+GRÁFICOS:
+- Gráficos estarão apenas no relatório
+- Será o gráfico de barras
+- Cada gráfico (de cada medida) apresentando os valores dos 4 cenários) 
+
+
+Quando uma rodada inicia nenhuma das chegadas anteriores ao seu inicio tem suas estatisticas coletadas

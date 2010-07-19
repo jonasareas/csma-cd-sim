@@ -20,6 +20,8 @@ public class Estacao
 
   // Variaveis de controle
 
+  private boolean              analiseUtilizacaoEthernet;
+  
   private boolean              meioEmColisao;
 
   private int                  meioOcupado;            // Indica quantas estacoes estao ocupando o meio
@@ -38,7 +40,7 @@ public class Estacao
 
   private double               tempoInicioTentativa;
   
-  public double                utilizacaoEthernet;
+  private double                tempoUtilizacaoEthernet;
 
   public Estacao(int codigo, double distancia, double p, double a, boolean ehDeterministico)
   {
@@ -55,7 +57,8 @@ public class Estacao
     this.forcarEnvio = false;
     this.esperandoBackoff = false;
     this.quadrosTransmitidos = 0;
-    this.utilizacaoEthernet = 0.0;
+    this.tempoUtilizacaoEthernet = 0.0;
+    this.analiseUtilizacaoEthernet = false;
   }
 
   public int getCodigo()
@@ -151,40 +154,6 @@ public class Estacao
     return forcarEnvio;
   }
   
-
-  public void pacoteEnviado(double tempoFimServico, int codigoRodada)
-  {
-    AcumuladorEstatistico ac = AcumuladorEstatistico.getInstancia();
-    
-    Mensagem msg = listaMensagens.getFirst();
-    
-    // Informacao pedida
-    if(msg.getCodigoRodadaEntrada() == codigoRodada)
-    {
-      this.utilizacaoEthernet += tempoFimServico - this.tempoInicioTentativa;
-      quadrosTransmitidos++;
-    }
-    this.tempoInicioTentativa = 0.0;
-
-    double fim = msg.getQuadro().getTempoFinalAcesso();
-    double inicio = msg.getQuadro().getTempoInicialAcesso();
-    
-    // Informacao pedida
-    if(msg.getCodigoRodadaEntrada() == codigoRodada)
-      ac.addTap(fim - inicio);
-
-    if (!msg.fimServicoQuadro())
-    {
-      // Informacao pedida
-      if(msg.getCodigoRodadaEntrada() == codigoRodada)
-      {
-        ac.addTam(fim - msg.getTempoInicialAcesso());
-        ac.addNcm(msg.colisoesPorQuadro());
-      }
-      listaMensagens.removeFirst();
-    }
-  }
-
   public int getTamanhoQuadro()
   {
     return listaMensagens.getFirst().getQuadro().getTamanhoQuadro();
@@ -199,27 +168,7 @@ public class Estacao
   {
     return listaMensagens.getFirst().getQuadro().getColisoes();
   }
-
-  public void descartaPacote(double tempoFimTentativa, int codigoRodada)
-  {
-    Mensagem msg = listaMensagens.getFirst();
-    
-    
-    if(msg.getCodigoRodadaEntrada() == codigoRodada)
-      this.utilizacaoEthernet += tempoFimTentativa - this.tempoInicioTentativa; //EH SOH PARA O PC 1
-    this.tempoInicioTentativa = 0.0;
-
-    // Nao contabiliza o TAp nem o TAm
-
-    if (!msg.fimServicoQuadro())
-    {
-      // Informacao pedida
-      if(msg.getCodigoRodadaEntrada() == codigoRodada)
-        AcumuladorEstatistico.getInstancia().addNcm(msg.colisoesPorQuadro());
-      listaMensagens.removeFirst();
-    }
-  }
-
+  
   public void setEsperandoBackoff(boolean esperandoBackoff)
   {
     this.esperandoBackoff = esperandoBackoff;
@@ -245,18 +194,68 @@ public class Estacao
     return tempoInicioTentativa;
   }
   
-  public int extraiQuadrosTransmitidos()
+  public double getTempoUtilizacaoEthernet()
   {
-    int tm = quadrosTransmitidos;
-    quadrosTransmitidos = 0;
-    return tm;
-  }
+    return tempoUtilizacaoEthernet;
+  }  
   
-  public double extraiUtilizacao()
+  public boolean isAnaliseUtilizacaoEthernet()
   {
-    double tm = utilizacaoEthernet;
-    utilizacaoEthernet = 0.0;
-    return tm;
+    return analiseUtilizacaoEthernet;
+  }
+
+  public void setAnaliseUtilizacaoEthernet(boolean analiseUtilizacaoEthernet)
+  {
+    this.analiseUtilizacaoEthernet = analiseUtilizacaoEthernet;
+  }
+
+  public void pacoteEnviado(double tempoFimServico, int codigoRodada)
+  {
+    AcumuladorEstatistico ac = AcumuladorEstatistico.getInstancia();
+    
+    Mensagem msg = listaMensagens.getFirst();
+    
+    // Não avalia estatísticas das mensagens que chegaram em rodadas anteriores!
+    if(msg.getCodigoRodadaEntrada() == codigoRodada)
+    {
+      this.tempoUtilizacaoEthernet += tempoFimServico - this.tempoInicioTentativa;
+      quadrosTransmitidos++;
+    }
+    this.tempoInicioTentativa = 0.0;
+
+    double inicioTransmissao = msg.getQuadro().getTempoInicioTransmissao();
+    double chegadaQuadroNoServidor = msg.getQuadro().getTempoConsideradoTransmissao();
+    double chegadaMensagemNoServidor = msg.getTempoConsideradaTransmissao();
+    
+    if(msg.getCodigoRodadaEntrada() == codigoRodada)
+      ac.novaAmostraTap(inicioTransmissao - chegadaQuadroNoServidor, codigo);
+
+    if (msg.fimServicoMensagem())
+    {
+      if(msg.getCodigoRodadaEntrada() == codigoRodada)
+      {
+        ac.novaAmostraTam(inicioTransmissao - chegadaMensagemNoServidor, codigo);
+        ac.novaAmostraNcm(msg.colisoesPorQuadro(), codigo);
+      }
+      listaMensagens.removeFirst();
+    }
+  }  
+
+  public void descartaPacote(double tempoFimTentativa, int codigoRodada)
+  {
+    Mensagem msg = listaMensagens.getFirst();
+    
+    if(msg.getCodigoRodadaEntrada() == codigoRodada && analiseUtilizacaoEthernet)
+      this.tempoUtilizacaoEthernet += tempoFimTentativa - this.tempoInicioTentativa; //TODO: Rever se tá certo!
+    this.tempoInicioTentativa = 0.0;
+
+    // Nao contabiliza o TAp nem o TAm
+    if (msg.fimServicoMensagem())
+    {
+      if(msg.getCodigoRodadaEntrada() == codigoRodada)
+        AcumuladorEstatistico.getInstancia().novaAmostraNcm(msg.colisoesPorQuadro(), codigo);
+      listaMensagens.removeFirst();
+    }
   }
   
   public int getQuadrosNaFila()

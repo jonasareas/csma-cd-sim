@@ -1,33 +1,20 @@
 package br.ufrj.ad.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import br.ufrj.ad.model.Estacao;
 import br.ufrj.ad.view.Tela;
 
 public class AcumuladorEstatistico
 {
-  // TODO: Que valores são esses?????
-  private static final double VAR_MAX_TAP = 1000.000000001;
-  private static final double VAR_MAX_TAM = 1000.000001;
-  private static final double VAR_MAX_NCM = 1000.00000001;
-  
   private static AcumuladorEstatistico instancia = null; 
-
-  private ArrayList<Double> tapi;
-  private ArrayList<Double> tap;
-    
-  private ArrayList<Double> tami;
-  private ArrayList<Double> tam;
-  
-  private ArrayList<Double> ncmi;
-  private ArrayList<Double> ncm;
-  
-  private ArrayList<Double> utilizacaoEthernet;
-  
-  private ArrayList< ArrayList<Double> > vazao; 
-  
-  private boolean transiente;
-  
+ 
+  HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> tapi;  
+  HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> tami;  
+  HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> ncmi;  
+ 
   public static AcumuladorEstatistico getInstancia()
   {
     if(instancia == null)
@@ -35,98 +22,28 @@ public class AcumuladorEstatistico
     return instancia;
   }
    
-  private AcumuladorEstatistico() {}
-  
-  private AcumuladorEstatistico(int numeroEstacoes)
+  public AcumuladorEstatistico()
   {
-    clear(numeroEstacoes);
+    tapi = new HashMap<Integer, EstruturaEstatistica>();
+    tami = new HashMap<Integer, EstruturaEstatistica>();
+    ncmi = new HashMap<Integer, EstruturaEstatistica>();
   }
   
-  private void reinicia()
+  public void addEstacao(int codigoEstacao)
   {
-    tap.clear();
-    tam.clear();
-    ncm.clear();
-    
-    utilizacaoEthernet.clear();
-    
-    for(ArrayList<Double> a : vazao)
-    {
-      a.clear();
-    }
+    tapi.put(codigoEstacao, new EstruturaEstatistica());
+    tami.put(codigoEstacao, new EstruturaEstatistica());
+    ncmi.put(codigoEstacao, new EstruturaEstatistica());
   }
   
-  public void fimRodada(double utilizacao, ArrayList<Double> vazao)
+  public void fimRodada()
   {
-    if(transiente)
-    {
-      if(!verificaTransiencia())
-      {
-        transiente = false;
-        Tela.jTextLog.append("Fim da Fase Transiente\n");
-      }
-      reinicia();
-      return;
-    }
-    
-    if(tap.size()>0)
-    {
-      tapi.add(media(tap));
-      tap.clear();
-    }
-    
-    if(tam.size()>0)
-    {
-      tami.add(media(tam));
-      tam.clear();
-    }
-    
-    if(ncm.size()>0)
-    {
-      ncmi.add(media(ncm));
-      ncm.clear();
-    }
-         
-    utilizacaoEthernet.add(utilizacao);
-    
-    for(int i = 0; i < vazao.size(); i++)
-    {
-      this.vazao.get(i).add(vazao.get(i));
-    }
-  }
-  
-  public void addTap(double val)
-  {
-    tap.add(val);
-  }
-  
-  public void addTam(double val)
-  {
-    tam.add(val);
-  }
-  
-  public void addNcm(double val)
-  {
-    ncm.add(val);
-  }
-  
-  private boolean verificaTransiencia()
-  {
-    double varTap = variancia(tap);
-    double varTam = variancia(tam);
-    double varNcm = variancia(ncm);
-    
-    /*
-    System.out.println("Analize Transiencia:");
-    System.out.println("    Var[Tap] = " + varTap + " - Valor Maximo = " + VAR_MAX_TAP);
-    System.out.println("    Var[Tam] = " + varTam + " - Valor Maximo = " + VAR_MAX_TAM);
-    System.out.println("    Var[Ncm] = " + varNcm + " - Valor Maximo = " + VAR_MAX_NCM);
- //   */
-    
-    if(varTap > VAR_MAX_TAP || varTam > VAR_MAX_TAM || varNcm > VAR_MAX_NCM)
-      return true;
-    
-    return false;
+     for (int codigoEstacao : tapi.keySet())
+     {
+       tapi.get(codigoEstacao).fimRodada();
+       tami.get(codigoEstacao).fimRodada();
+       ncmi.get(codigoEstacao).fimRodada();
+     }
   }
   
   private double variancia(ArrayList<Double> list)
@@ -157,47 +74,72 @@ public class AcumuladorEstatistico
     return sum/list.size();
   }
   
-  public boolean isTransiente()
+  public void extraiEstatistica(List<Estacao> listaEstacoes, double tempoSimulacao)
   {
-    return transiente;
-  }
-  //TODO: Não deveria ser para cada estação?
-  public void extraiEstatistica()
-  {
-    Tela.jTextLog.append("Dados de Tapi:\n");
-    Tela.jTextLog.append("   N        = " + tapi.size() + "\n");
-    Tela.jTextLog.append("   E[Tap]   = " + media(tapi) + "\n");
-    Tela.jTextLog.append("   VAR[Tap] = " + variancia(tapi) + "\n\n");
+    // Math.floor(tempo * 10000)/10000
+    // Imprimir variancia?
     
-    Tela.jTextLog.append("Dados de Tami:\n");
-    Tela.jTextLog.append("   N        = " + tami.size() + "\n");
-    Tela.jTextLog.append("   E[Tam]   = " + media(tami) + "\n");
-    Tela.jTextLog.append("   VAR[Tam] = " + variancia(tami) + "\n\n");
-    
-    Tela.jTextLog.append("Dados de Ncmi:\n");
-    Tela.jTextLog.append("   N        = " + ncmi.size() + "\n");
-    Tela.jTextLog.append("   E[Tam]   = " + media(ncmi) + "\n");
-    Tela.jTextLog.append("   VAR[Tam] = " + variancia(ncmi) + "\n\n");
+    for (Estacao estacao : listaEstacoes)
+    {
+      Tela.jTextLog.append("TAp da estacao " + estacao.getCodigo() + " = " + media(tapi.get(estacao.getCodigo()).getValorPorRodada()) + "\n");
+      Tela.jTextLog.append("TAm da estacao " + estacao.getCodigo() + " = " + media(tami.get(estacao.getCodigo()).getValorPorRodada()) + "\n");
+      Tela.jTextLog.append("NCm da estacao " + estacao.getCodigo() + " = " + media(ncmi.get(estacao.getCodigo()).getValorPorRodada()) + "\n");
+      Tela.jTextLog.append("Vazao da estacao " + estacao.getCodigo() + " = " + estacao.getQuadrosTransmitidos()/tempoSimulacao + "\n");
+      if (estacao.isAnaliseUtilizacaoEthernet())
+        Tela.jTextLog.append("Utilizacao = " + estacao.getTempoUtilizacaoEthernet()/tempoSimulacao + "\n\n");
+    }
   }
   
-  public void clear(int numeroEstacoes)
+  public void novaAmostraTap(double amostra, int codigoEstacao)
   {
-    vazao = new ArrayList< ArrayList<Double> > ();
-    for(int i = 0; i < numeroEstacoes; i++)
-    {
-       vazao.add(new ArrayList<Double>());
+    EstruturaEstatistica estrutura = tapi.get(codigoEstacao);
+    estrutura.novaAmostra(amostra);
+  }
+  
+  public void novaAmostraTam(double amostra, int codigoEstacao)
+  {
+    EstruturaEstatistica estrutura = tami.get(codigoEstacao);
+    estrutura.novaAmostra(amostra);    
+  }
+  
+  public void novaAmostraNcm(double amostra, int codigoEstacao)
+  {
+    EstruturaEstatistica estrutura = ncmi.get(codigoEstacao);
+    estrutura.novaAmostra(amostra);    
+  }  
+  
+  private class EstruturaEstatistica
+  {
+    ArrayList<Double> valorPorRodada;
+    Double acumuladorRodada;
+    int numeroAmostrasRodada;
+    
+    public EstruturaEstatistica() {
+      valorPorRodada = new ArrayList<Double>();
+      acumuladorRodada = 0.0;
+      numeroAmostrasRodada = 0;
     }
     
-    this.transiente = true;
+    public void novaAmostra(Double amostra)
+    {
+      numeroAmostrasRodada++;
+      acumuladorRodada += amostra;
+    }
     
-    tapi = new ArrayList<Double>();
-    tami = new ArrayList<Double>();
-    ncmi = new ArrayList<Double>();
-    
-    tap = new ArrayList<Double>();
-    tam = new ArrayList<Double>();
-    ncm = new ArrayList<Double>();
-    
-    utilizacaoEthernet = new ArrayList<Double>(); 
+    public void fimRodada()
+    {
+      if (numeroAmostrasRodada > 0)
+      {
+        valorPorRodada.add(acumuladorRodada/numeroAmostrasRodada);
+        acumuladorRodada = 0.0;
+        numeroAmostrasRodada = 0;
+      }
+    }
+
+    public ArrayList<Double> getValorPorRodada()
+    {
+      return valorPorRodada;
+    }
+
   }
 }

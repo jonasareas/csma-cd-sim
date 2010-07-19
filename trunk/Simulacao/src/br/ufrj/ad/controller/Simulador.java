@@ -12,7 +12,6 @@ import br.ufrj.ad.model.Quadro;
 import br.ufrj.ad.parametros.ParametroA;
 import br.ufrj.ad.parametros.ParametroP;
 import br.ufrj.ad.util.BinaryBackoff;
-import br.ufrj.ad.view.Tela;
 
 public class Simulador
 {
@@ -41,33 +40,34 @@ public class Simulador
   
   private AcumuladorEstatistico acumulador;
   
-  private int codigoEstacaoAnaliseUtilizacao;
-  
   private int codigoRodada;
 
   public void iniciaSimulacao(double tempoRodada, int numeroRodadas, ArrayList<ConfiguracaoPc> parametros, int codigoEstacaoAnaliseUtilizacao)
   {
-    Estacao est;
     for (ConfiguracaoPc config : parametros)
     {
-      est = new Estacao(config.getCodigo(), config.getDistancia(), config.getP(), config.getA(), config.isDeterministico());
-      listaPCs.add(est);
+      Estacao estacao = new Estacao(config.getCodigo(), config.getDistancia(), config.getP(), config.getA(), config.isDeterministico());
+      listaPCs.add(estacao);
+      if (config.getCodigo() == codigoEstacaoAnaliseUtilizacao)
+      {
+        estacao.setAnaliseUtilizacaoEthernet(true);
+      }
     }
-    this.codigoEstacaoAnaliseUtilizacao = codigoEstacaoAnaliseUtilizacao;
 
     listaEventos = new PriorityQueue<Evento>();
+    acumulador = AcumuladorEstatistico.getInstancia();    
 
     int i = 0;
     for (Estacao estacao : listaPCs)
     {
+      acumulador.addEstacao(estacao.getCodigo());      
       if (estacao.getP() != 0)
       {
         i++;
         programaChegadaNaFila(ParametroA.geraParametro(estacao.getA(), estacao.isDeterministico()), estacao.getCodigo()); 
       }
     }
-    acumulador = AcumuladorEstatistico.getInstancia();
-    acumulador.clear(i);
+    
     codigoRodada = 1;
     simula(tempoRodada, numeroRodadas);
   }
@@ -80,7 +80,7 @@ public class Simulador
 
   private void simula(double tempoSimulacao, int numeroRodadas)
   {
-    Evento evento;
+    Evento evento = null;
     for(int i = 1 ; i <= numeroRodadas; i++)
     {
       do
@@ -88,30 +88,12 @@ public class Simulador
         evento = listaEventos.remove();
         verificaTipoEvento(evento);
       }
-      while (evento.getTempoExecucao() < tempoSimulacao*i);
-      
-      ArrayList<Double> vz = new ArrayList<Double>();
-      for(Estacao e: listaPCs)
-      {
-        if(e.getP() != 0)
-        {
-          vz.add(e.extraiQuadrosTransmitidos()/tempoSimulacao);
-        }
-      }
-      
-      Estacao pcAnaliseUtilizacao = buscaEstacao(codigoEstacaoAnaliseUtilizacao);
-      if(acumulador.isTransiente())
-      {
-        // numeroRodadas++; //TODO: Isso não pode ser assim, senão caga o tempo de simulação! =S
-      }
-      else
-      {
-        Tela.jTextLog.append("Final da rodada " + codigoRodada + "\n");
-        codigoRodada++;
-      }
-      acumulador.fimRodada(pcAnaliseUtilizacao.extraiUtilizacao(), vz);
+      while (evento.getTempoExecucao() < tempoSimulacao * i);
+      System.out.print(Double.toString(evento.getTempoExecucao()) + ": Fim da rodada " + i);      
+      acumulador.fimRodada();      
+      codigoRodada++;
     }
-    acumulador.extraiEstatistica();
+    acumulador.extraiEstatistica(listaPCs, evento.getTempoExecucao());
   }
 
   private Estacao buscaEstacao(int codEstacao)
@@ -200,22 +182,22 @@ public class Simulador
 
     Mensagem msg = estacao.getMensagem();
     
-    Quadro qd = msg.getQuadro();
+    Quadro quadro = msg.getQuadro();
 
-    if (msg.getTempoInicialAcesso() == 0.0)
+    if (msg.getTempoConsideradaTransmissao() == 0.0)
     {
-      msg.setTempoInicialAcesso(evento.getTempoExecucao());
+      msg.setTempoConsideradaTransmissao(evento.getTempoExecucao());
     }
-    if (qd.getTempoInicialAcesso() == 0.0)
+    if (quadro.getTempoConsideradoTransmissao() == 0.0)
     {
-      qd.setTempoInicialAcesso(evento.getTempoExecucao());
+      quadro.setTempoConsideradoTransmissao(evento.getTempoExecucao());
     }
 
     if (estacao.getMeioOcupado() == 0)
     {
       if (!estacao.isEsperandoTempoSeguranca())
       {
-        qd.setFinalAcesso(evento.getTempoExecucao()); // Estatisticas
+        quadro.setInicioTransmissao(evento.getTempoExecucao()); // Estatisticas
         System.out.println(Double.toString(evento.getTempoExecucao()) + ": Inicio de envio de " + evento.getCodigoEstacao());
 
         enviaInformacoes(evento, estacao, TipoEvento.MeioOcupado);
