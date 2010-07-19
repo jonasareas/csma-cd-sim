@@ -10,7 +10,7 @@ public class Mensagem
 
   private Quadro          quadro         = null;
 
-  private double          tempoInicialAcesso;
+  private double          tempoConsideradaTransmissao;
 
   private int             totalColisoes;
   
@@ -25,7 +25,7 @@ public class Mensagem
       quadro = new Quadro(TAMANHO_QUADRO);
     }
     this.codigoRodadaEntrada = codigoRodadaEntrada ;
-    tempoInicialAcesso = 0.0;
+    tempoConsideradaTransmissao = 0.0;
     totalColisoes = 0;
   }
 
@@ -34,18 +34,19 @@ public class Mensagem
     return quadro;
   }
 
-  public boolean fimServicoQuadro()
+  // Finaliza o serviço de um quadro e indica se ainda há quadros a serem transmitidos.
+  public boolean fimServicoMensagem()
   {
     if (this.quantidadeQuadros > 0)
     {
       this.quantidadeQuadros--;
       this.totalColisoes += quadro.getColisoes();
       quadro = new Quadro(TAMANHO_QUADRO);
-      return true;
+      return false;
     }
 
     quadro = null;
-    return false;
+    return true;
 
   }
 
@@ -54,15 +55,15 @@ public class Mensagem
     return quantidadeQuadros;
   }
 
-  public void setTempoInicialAcesso(double tempoPrimeiroAcesso)
+  public void setTempoConsideradaTransmissao(double tempoConsideradaTransmissao)
   {
-    this.tempoInicialAcesso = tempoPrimeiroAcesso;
-    quadro.setTempoInicialAcesso(tempoPrimeiroAcesso);
+    this.tempoConsideradaTransmissao = tempoConsideradaTransmissao;
+    // quadro.setTempoConsideradoTransmissao(tempoConsideradaTransmissao); TODO: Pode tirar?
   }
 
-  public double getTempoInicialAcesso()
+  public double getTempoConsideradaTransmissao()
   {
-    return tempoInicialAcesso;
+    return tempoConsideradaTransmissao;
   }
 
   public int getTotalQuadros() 

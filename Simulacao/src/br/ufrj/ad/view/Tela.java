@@ -333,7 +333,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     parametros.add(config3);
     parametros.add(config4);
 
-    simulador.iniciaSimulacao(tempoSimulacao, 1, parametros, 1); 
+    simulador.iniciaSimulacao(tempoSimulacao, 30, parametros, 1); 
   }
   
   public void itemStateChanged(ItemEvent e) {
