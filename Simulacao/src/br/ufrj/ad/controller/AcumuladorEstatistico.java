@@ -5,15 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import br.ufrj.ad.model.Estacao;
-import br.ufrj.ad.view.Tela;
 
 public class AcumuladorEstatistico
 {
   private static AcumuladorEstatistico instancia = null; 
  
-  HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> tapi;  
-  HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> tami;  
-  HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> ncmi;  
+  public HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> tapi;  
+  public HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> tami;  
+  public HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> ncmi;  
+  
+  private ArrayList<String> mensagens = new ArrayList<String>();
  
   public static AcumuladorEstatistico getInstancia()
   {
@@ -79,15 +80,20 @@ public class AcumuladorEstatistico
     // Math.floor(tempo * 10000)/10000
     // Imprimir variancia?
     
+    Double utilizacao = 0.0;
+    
     for (Estacao estacao : listaEstacoes)
     {
-      Tela.jTextLog.append("TAp da estacao " + estacao.getCodigo() + " = " + media(tapi.get(estacao.getCodigo()).getValorPorRodada()) + "\n");
-      Tela.jTextLog.append("TAm da estacao " + estacao.getCodigo() + " = " + media(tami.get(estacao.getCodigo()).getValorPorRodada()) + "\n");
-      Tela.jTextLog.append("NCm da estacao " + estacao.getCodigo() + " = " + media(ncmi.get(estacao.getCodigo()).getValorPorRodada()) + "\n");
-      Tela.jTextLog.append("Vazao da estacao " + estacao.getCodigo() + " = " + estacao.getQuadrosTransmitidos()/tempoSimulacao + "\n");
+      mensagens.add("\nESTATISTICAS DA ESTACAO " + estacao.getCodigo() + "\n");
+      mensagens.add("TAp da estacao " + estacao.getCodigo() + " = " + media(tapi.get(estacao.getCodigo()).getValorPorRodada()) + "\n");
+      mensagens.add("TAm da estacao " + estacao.getCodigo() + " = " + media(tami.get(estacao.getCodigo()).getValorPorRodada()) + "\n");
+      mensagens.add("NCm da estacao " + estacao.getCodigo() + " = " + media(ncmi.get(estacao.getCodigo()).getValorPorRodada()) + "\n");
+      mensagens.add("Vazao da estacao " + estacao.getCodigo() + " = " + estacao.getQuadrosTransmitidos()/tempoSimulacao + "\n");
       if (estacao.isAnaliseUtilizacaoEthernet())
-        Tela.jTextLog.append("Utilizacao = " + estacao.getTempoUtilizacaoEthernet()/tempoSimulacao + "\n\n");
+        utilizacao = estacao.getTempoUtilizacaoEthernet()/tempoSimulacao;
     }
+    mensagens.add("\nESTATISTICAS DA ETHERNET\n");
+    mensagens.add("Utilizacao = " + utilizacao + " ( " + Math.floor((utilizacao * 100) * 10000)/10000  + " % do tempo total de simulacao)\n");
   }
   
   public void novaAmostraTap(double amostra, int codigoEstacao)
@@ -108,6 +114,18 @@ public class AcumuladorEstatistico
     estrutura.novaAmostra(amostra);    
   }  
   
+  public ArrayList<String> getMensagens()
+  {
+    return mensagens;
+  }
+
+  public void setMensagens(ArrayList<String> mensagens)
+  {
+    this.mensagens = mensagens;
+  }
+
+
+
   private class EstruturaEstatistica
   {
     ArrayList<Double> valorPorRodada;

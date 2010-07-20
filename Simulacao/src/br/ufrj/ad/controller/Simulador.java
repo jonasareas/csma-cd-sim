@@ -9,26 +9,13 @@ import br.ufrj.ad.model.Estacao;
 import br.ufrj.ad.model.Evento;
 import br.ufrj.ad.model.Mensagem;
 import br.ufrj.ad.model.Quadro;
+import br.ufrj.ad.model.Evento.TipoEvento;
 import br.ufrj.ad.parametros.ParametroA;
 import br.ufrj.ad.parametros.ParametroP;
 import br.ufrj.ad.util.BinaryBackoff;
 
 public class Simulador
 {
-  public static enum TipoEvento 
-  {
-    ChegadaNaFila, 
-    TentativaEnvio, 
-    FimTransmissao, 
-    MeioOcupado,
-    MeioOcupadoPorMim,
-    MeioLivre,
-    MeioLivrePorMim,
-    FimEspera, 
-    FimReforcoColisao, 
-    FimBackOff
-  }
-
   private static final double   PROPAGACAO_ELETRICA      = 0.000005;    // Em milisegundos/metro
   private static final double   TEMPO_ENTRE_TRANSMISSOES = 0.0096;      // Em milisegundos
   private static final double   TEMPO_REFORCO_COLISAO    = 0.0032;      // Em milisegundos
