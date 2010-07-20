@@ -1,10 +1,22 @@
 package br.ufrj.ad.model;
 
-import br.ufrj.ad.controller.Simulador.TipoEvento;
-
-
 public class Evento implements Comparable<Evento>
 {
+  
+  public static enum TipoEvento 
+  {
+    ChegadaNaFila, 
+    TentativaEnvio, 
+    FimTransmissao, 
+    MeioOcupado,
+    MeioOcupadoPorMim,
+    MeioLivre,
+    MeioLivrePorMim,
+    FimEspera, 
+    FimReforcoColisao, 
+    FimBackOff
+  }  
+  
   private double tempoExecucao;
   
   private TipoEvento tipoEvento;
