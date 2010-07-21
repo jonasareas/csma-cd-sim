@@ -111,3 +111,17 @@ SERÁ BATCH
 !!!!!!!!!!!!Quando o sistema estiver depurado, estes pontos podem ser comentados ou retirados.!!!!!!!!!!!!!!!
 
 Quando uma rodada inicia nenhuma das chegadas anteriores ao seu inicio tem suas estatisticas coletadas
+
+
+Como detecto colisao? =S
+quadroEnviado
+incrementaColisoes
+
+ver modelo / acumulador / simulador (TODOs)
+
+MeioLivre
+MeioOcupado
+
+ERROS:
+1 - UtilizacaoEthernet
+2 - Rever se contabiliza tempo de backoff

@@ -29,7 +29,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
 {
   private static final int CODIGO_ESTACAO_ANALISE_UTILIZACAO = 1;
   private static final int NUMERO_RODADAS = 30;
-  private static final double TEMPO_SIMULACAO_EM_SEGUNDOS = 10;
+  private static final double TEMPO_RODADA_EM_SEGUNDOS = 1;
   
   private JPanel jContentPane;
   private JLabel jLabelTitulo;
@@ -319,10 +319,10 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
   private void configuraSimulacao(ConfiguracaoPc config1, ConfiguracaoPc config2, ConfiguracaoPc config3, ConfiguracaoPc config4)
   {
     Simulador simulador = new Simulador();
-    double tempoSimulacao = TEMPO_SIMULACAO_EM_SEGUNDOS * 1000; // Passando para milisegundos.
+    double tempoSimulacao = TEMPO_RODADA_EM_SEGUNDOS * 1000; // Passando para milisegundos.
     
     jTextAreaEstatisticas.append("[LOG] NUMERO DE RODADAS:" + NUMERO_RODADAS + "\n");    
-    jTextAreaEstatisticas.append("[LOG] TEMPO DE DE CADA RODADA:" + TEMPO_SIMULACAO_EM_SEGUNDOS + " segundos\n");
+    jTextAreaEstatisticas.append("[LOG] TEMPO DE DE CADA RODADA:" + TEMPO_RODADA_EM_SEGUNDOS + " segundos\n");
   
     ArrayList<ConfiguracaoPc> parametros = new ArrayList<ConfiguracaoPc>();
     parametros.add(config1);
