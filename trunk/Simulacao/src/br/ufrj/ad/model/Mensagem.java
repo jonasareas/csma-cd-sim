@@ -2,11 +2,9 @@ package br.ufrj.ad.model;
 
 public class Mensagem
 {
-  public static final int TAMANHO_QUADRO = 1000; // Em bytes
+  private int             quantidadeQuadros;            // Quantidade restante de quadros a serem enviados
 
-  private int             quantidadeQuadros;     // Quantidade restante de quadros a serem enviados
-
-  private int             totalQuadros;          // Total de quadros da mensagem
+  private int             totalQuadros;                 // Total de quadros da mensagem
 
   private Quadro          quadro         = null;
 
@@ -14,7 +12,7 @@ public class Mensagem
 
   private int             totalColisoes;
   
-  private int             codigoRodadaEntrada; //TODO: Pra que precisa disso aqui?
+  private int             codigoRodadaEntrada; 
 
   public Mensagem(int tamanho,int codigoRodadaEntrada)
   {
@@ -22,7 +20,7 @@ public class Mensagem
     {
       this.totalQuadros = tamanho;
       this.quantidadeQuadros = tamanho - 1;
-      quadro = new Quadro(TAMANHO_QUADRO);
+      quadro = new Quadro();
     }
     this.codigoRodadaEntrada = codigoRodadaEntrada ;
     tempoConsideradaTransmissao = 0.0;
@@ -40,8 +38,8 @@ public class Mensagem
     if (this.quantidadeQuadros > 0)
     {
       this.quantidadeQuadros--;
-      this.totalColisoes += quadro.getColisoes();
-      quadro = new Quadro(TAMANHO_QUADRO);
+      this.totalColisoes += quadro.getNumeroColisoes();
+      quadro = new Quadro();
       return false;
     }
 
@@ -76,7 +74,6 @@ public class Mensagem
     return totalColisoes; 
   }
 
-  // Informacao pedida
   public double colisoesPorQuadro()
   {
     return (double) (totalColisoes) / (double) (totalQuadros);

@@ -77,9 +77,6 @@ public class AcumuladorEstatistico
   
   public void extraiEstatistica(List<Estacao> listaEstacoes, double tempoSimulacao)
   {
-    // Math.floor(tempo * 10000)/10000
-    // Imprimir variancia?
-    
     Double utilizacao = 0.0;
     
     for (Estacao estacao : listaEstacoes)
@@ -123,8 +120,6 @@ public class AcumuladorEstatistico
   {
     this.mensagens = mensagens;
   }
-
-
 
   private class EstruturaEstatistica
   {

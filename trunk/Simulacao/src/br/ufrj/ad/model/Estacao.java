@@ -34,13 +34,13 @@ public class Estacao
 
   private boolean              forcarEnvio;
 
-  private LinkedList<Mensagem> listaMensagens;
+  private LinkedList<Mensagem> filaMensagens;
 
   private int                  quadrosTransmitidos;
 
   private double               tempoInicioTentativa;
   
-  private double                tempoUtilizacaoEthernet;
+  private double               tempoUtilizacaoEthernet;
 
   public Estacao(int codigo, double distancia, double p, double a, boolean ehDeterministico)
   {
@@ -49,7 +49,7 @@ public class Estacao
     this.p = p;
     this.a = a;
     this.deterministico = ehDeterministico;
-    this.listaMensagens = new LinkedList<Mensagem>();
+    this.filaMensagens = new LinkedList<Mensagem>();
     this.meioEmColisao = false;
     this.meioOcupado = 0;
     this.esperandoTempoSeguranca = false;
@@ -106,22 +106,22 @@ public class Estacao
     return deterministico;
   }
 
-  public void addMensagem(Mensagem mem)
+  public void addMensagem(Mensagem mensagem)
   {
-    listaMensagens.addLast(mem);
+    filaMensagens.addLast(mensagem);
   }
 
-  public Mensagem getMensagem()
+  public Mensagem getMensagemEmServico()
   {
-    if (listaMensagens.isEmpty())
+    if (filaMensagens.isEmpty())
       return null;
 
-    return listaMensagens.getFirst();
+    return filaMensagens.getFirst();
   }
 
-  public boolean isFilaVazia()
+  public boolean filaServicoVazia()
   {
-    return listaMensagens.isEmpty();
+    return filaMensagens.isEmpty();
   }
 
   public void setEsperandoTempoSeguranca(boolean esperandoTempoSeguranca)
@@ -152,21 +152,6 @@ public class Estacao
   public boolean isForcarEnvio()
   {
     return forcarEnvio;
-  }
-  
-  public int getTamanhoQuadro()
-  {
-    return listaMensagens.getFirst().getQuadro().getTamanhoQuadro();
-  }
-
-  public void incrementaQuantidadeColisoes()
-  {
-    listaMensagens.getFirst().getQuadro().incrementaColisoes();
-  }
-
-  public int getQuantidadeColisoes()
-  {
-    return listaMensagens.getFirst().getQuadro().getColisoes();
   }
   
   public void setEsperandoBackoff(boolean esperandoBackoff)
@@ -209,11 +194,11 @@ public class Estacao
     this.analiseUtilizacaoEthernet = analiseUtilizacaoEthernet;
   }
 
-  public void pacoteEnviado(double tempoFimServico, int codigoRodada)
+  public void quadroEnviado(double tempoFimServico, int codigoRodada)
   {
-    AcumuladorEstatistico ac = AcumuladorEstatistico.getInstancia();
+    AcumuladorEstatistico acumulador = AcumuladorEstatistico.getInstancia();
     
-    Mensagem msg = listaMensagens.getFirst();
+    Mensagem msg = filaMensagens.getFirst();
     
     // Não avalia estatísticas das mensagens que chegaram em rodadas anteriores!
     if(msg.getCodigoRodadaEntrada() == codigoRodada)
@@ -228,22 +213,22 @@ public class Estacao
     double chegadaMensagemNoServidor = msg.getTempoConsideradaTransmissao();
     
     if(msg.getCodigoRodadaEntrada() == codigoRodada)
-      ac.novaAmostraTap(inicioTransmissao - chegadaQuadroNoServidor, codigo);
+      acumulador.novaAmostraTap(inicioTransmissao - chegadaQuadroNoServidor, codigo);
 
     if (msg.fimServicoMensagem())
     {
       if(msg.getCodigoRodadaEntrada() == codigoRodada)
       {
-        ac.novaAmostraTam(inicioTransmissao - chegadaMensagemNoServidor, codigo);
-        ac.novaAmostraNcm(msg.colisoesPorQuadro(), codigo);
+        acumulador.novaAmostraTam(inicioTransmissao - chegadaMensagemNoServidor, codigo);
+        acumulador.novaAmostraNcm(msg.colisoesPorQuadro(), codigo);
       }
-      listaMensagens.removeFirst();
+      filaMensagens.removeFirst();
     }
   }  
 
   public void descartaPacote(double tempoFimTentativa, int codigoRodada)
   {
-    Mensagem msg = listaMensagens.getFirst();
+    Mensagem msg = filaMensagens.getFirst();
     
     if(msg.getCodigoRodadaEntrada() == codigoRodada && analiseUtilizacaoEthernet)
       this.tempoUtilizacaoEthernet += tempoFimTentativa - this.tempoInicioTentativa; //TODO: Rever se tá certo!
@@ -254,16 +239,16 @@ public class Estacao
     {
       if(msg.getCodigoRodadaEntrada() == codigoRodada)
         AcumuladorEstatistico.getInstancia().novaAmostraNcm(msg.colisoesPorQuadro(), codigo);
-      listaMensagens.removeFirst();
+      filaMensagens.removeFirst();
     }
   }
   
   public int getQuadrosNaFila()
   {
     int total = 0;
-    for (Mensagem m : listaMensagens)
+    for (Mensagem msg : filaMensagens)
     {
-      total += m.getQuantidadeQuadros() + 1; // Total de quadros eh a quantidade de quadros que a 
+      total += msg.getQuantidadeQuadros() + 1; // Total de quadros eh a quantidade de quadros que a 
                                              // que a mensagem recebeu para enviar. O "+1" eh pq o 
                                              // valor quantidade de quadros, eh a quantidade de
                                              // quantidade de quadros restantes menos 1 que eh o 

@@ -5,22 +5,18 @@ public class Evento implements Comparable<Evento>
   
   public static enum TipoEvento 
   {
-    ChegadaNaFila, 
-    TentativaEnvio, 
-    FimTransmissao, 
-    MeioOcupado,
-    MeioOcupadoPorMim,
-    MeioLivre,
-    MeioLivrePorMim,
-    FimEspera, 
-    FimReforcoColisao, 
-    FimBackOff
+    CHEGADA_NA_FILA, 
+    TENTATIVA_ENVIO, 
+    FIM_TRANSMISSAO_QUADRO, 
+    MEIO_OCUPADO,
+    MEIO_LIVRE,
+    FIM_ESPERA_TEMPO_DE_SEGURANCA, 
+    FIM_TRANSMISSAO_REFORCO_COLISAO, 
+    FIM_ESPERA_BACKOFF
   }  
   
   private double tempoExecucao;
-  
   private TipoEvento tipoEvento;
-  
   private int codigoEstacao;
   
   public Evento(TipoEvento tipoEvento, double tempoExecucao, int codigoEstacao) {

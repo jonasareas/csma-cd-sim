@@ -4,28 +4,13 @@ public class Quadro
 {
 
   private double tempoConsideradoTransmissao;
-
   private double tempoInicioTransmissao;
+  private int    numeroColisoes;
 
-  private int    tamanhoQuadro;
-
-  private int    colisoes;
-
-  public Quadro(int tamanhoQuadro)
+  public Quadro()
   {
-    this.tamanhoQuadro = tamanhoQuadro;
     this.tempoConsideradoTransmissao = 0.0;
     this.tempoInicioTransmissao = 0.0;
-  }
-
-  public void setTamanhoQuadro(int tamanhoQuadro)
-  {
-    this.tamanhoQuadro = tamanhoQuadro;
-  }
-
-  public int getTamanhoQuadro()
-  {
-    return tamanhoQuadro;
   }
 
   public void setInicioTransmissao(double tempoInicioTransmissao)
@@ -50,12 +35,12 @@ public class Quadro
 
   public void incrementaColisoes()
   {
-    this.colisoes++;
+    this.numeroColisoes++;
   }
 
-  public int getColisoes()
+  public int getNumeroColisoes()
   {
-    return colisoes;
+    return numeroColisoes;
   }
 
 }
