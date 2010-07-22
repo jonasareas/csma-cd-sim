@@ -1,6 +1,6 @@
-package br.ufrj.ad.parametros;
+package br.ufrj.ad.util.parametros;
 
-import br.ufrj.ad.controller.variaveis.Exponencial;
+import br.ufrj.ad.util.variaveis.Exponencial;
 
 public class ParametroA
 {
