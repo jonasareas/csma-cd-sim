@@ -1,4 +1,4 @@
-package br.ufrj.ad.util.parametros;
+package br.ufrj.ad.parametros;
 
 import br.ufrj.ad.util.variaveis.Geometrica;
 
