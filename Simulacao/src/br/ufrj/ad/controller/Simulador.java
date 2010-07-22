@@ -10,20 +10,20 @@ import br.ufrj.ad.model.Evento;
 import br.ufrj.ad.model.Mensagem;
 import br.ufrj.ad.model.Quadro;
 import br.ufrj.ad.model.Evento.TipoEvento;
+import br.ufrj.ad.parametros.ParametroA;
+import br.ufrj.ad.parametros.ParametroP;
 import br.ufrj.ad.util.BinaryBackoff;
-import br.ufrj.ad.util.parametros.ParametroA;
-import br.ufrj.ad.util.parametros.ParametroP;
 
 public class Simulador
 {
   // Constantes
   private static final double   PROPAGACAO_ELETRICA      = 0.000005;    // Em milisegundos/metro
   
-  private static final double   TEMPO_ENTRE_TRANSMISSOES = 0.0096;      // Em milisegundos
+  private static final double   TEMPO_ENTRE_TRANSMISSOES = 0.0096;      // Em milessegundos
   
-  private static final double   TEMPO_REFORCO_COLISAO    = 0.0032;      // Em milisegundos
+  private static final double   TEMPO_REFORCO_COLISAO    = 0.0032;      // Em milessegundos
   
-  private static final double   TEMPO_ENVIO_DE_UM_BYTE   = 0.0008;      // Em milisegundos
+  private static final double   TEMPO_ENVIO_DE_UM_BYTE   = 0.0008;      // Em milessegundos
   
   private static final int      TAMANHO_QUADRO           = 1000;        // Em bytes
 
