@@ -2,18 +2,21 @@ package br.ufrj.ad.model;
 
 public class Mensagem
 {
-  private int             quantidadeQuadros;            // Quantidade restante de quadros a serem enviados
+  private int             quantidadeQuadros;                // Quantidade restante de quadros a serem enviados
 
-  private int             totalQuadros;                 // Total de quadros da mensagem
+  private int             totalQuadros;                     // Total de quadros da mensagem
 
-  private Quadro          quadro         = null;
+  private Quadro          quadro = null;                    // Instancia de um Quadro da mensagem
 
-  private double          tempoConsideradaTransmissao;
+  private double          tempoConsideradaTransmissao;      // Tempo inicial da mensagem para o Tam(i)
 
-  private int             totalColisoes;
+  private int             totalColisoes;                    // Total de colisoes da mensagem
   
-  private int             codigoRodadaEntrada; 
+  private int             codigoRodadaEntrada;              // Numero da rodada a qual a mensagem faz parte
 
+  /*
+   * Construtor da Classe: Responsavel por inicializar uma Mensagem com o seu tamanho e o codigo a qual ela pertence.
+   */
   public Mensagem(int tamanho,int codigoRodadaEntrada)
   {
     if (tamanho > 0)
@@ -32,22 +35,6 @@ public class Mensagem
     return quadro;
   }
 
-  // Finaliza o serviço de um quadro e indica se ainda há quadros a serem transmitidos.
-  public boolean fimServicoMensagem()
-  {
-    if (this.quantidadeQuadros > 0)
-    {
-      this.quantidadeQuadros--;
-      this.totalColisoes += quadro.getNumeroColisoes();
-      quadro = new Quadro();
-      return false;
-    }
-
-    quadro = null;
-    return true;
-
-  }
-
   public int getQuantidadeQuadros()
   {
     return quantidadeQuadros;
@@ -56,7 +43,6 @@ public class Mensagem
   public void setTempoConsideradaTransmissao(double tempoConsideradaTransmissao)
   {
     this.tempoConsideradaTransmissao = tempoConsideradaTransmissao;
-    // quadro.setTempoConsideradoTransmissao(tempoConsideradaTransmissao); TODO: Pode tirar?
   }
 
   public double getTempoConsideradaTransmissao()
@@ -74,14 +60,35 @@ public class Mensagem
     return totalColisoes; 
   }
 
+  public int getCodigoRodadaEntrada()
+  {
+    return codigoRodadaEntrada;
+  }
+  
+  /*
+   * Retorna o numero de colisoes por Quadro na mensagem
+   */
   public double colisoesPorQuadro()
   {
     return (double) (totalColisoes) / (double) (totalQuadros);
   }
 
-  public int getCodigoRodadaEntrada()
+  /*
+   * Finaliza o servico de um quadro e indica se ainda ha quadros a serem transmitidos.
+   */
+  public boolean fimServicoMensagem()
   {
-    return codigoRodadaEntrada;
+    if (this.quantidadeQuadros > 0)
+    {
+      this.quantidadeQuadros--;
+      this.totalColisoes += quadro.getNumeroColisoes();
+      quadro = new Quadro();
+      return false;
+    }
+
+    quadro = null;
+    return true;
   }
+
 
 }
