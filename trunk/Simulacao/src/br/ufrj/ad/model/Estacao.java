@@ -1,3 +1,12 @@
+/*
+ * Trabalho de Avaliacao e Desempenho - 2010/1
+ * Grupo:   Diogo Borges Lima
+ *          Jonas Areas Fragozo de Souza
+ *          Marcelo Jochem da Silva
+ *          Thiago Elias Gomes
+ *          
+ * Professor Orientador: Paulo Aguiar
+ */
 package br.ufrj.ad.model;
 
 import java.util.LinkedList;
