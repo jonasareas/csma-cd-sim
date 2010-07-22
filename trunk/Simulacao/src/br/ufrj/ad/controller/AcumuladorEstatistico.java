@@ -10,19 +10,27 @@ public class AcumuladorEstatistico
 {
   private static AcumuladorEstatistico instancia = null; 
  
-  public HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> tapi;  
-  public HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> tami;  
-  public HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> ncmi;  
+  public HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> tapi; // Tempo de acesso de um quadro na estacao i  
   
-  private ArrayList<String> mensagens = new ArrayList<String>();
+  public HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> tami; // Tempo de acesso de uma mensagem na estacao i
+  
+  public HashMap<Integer, AcumuladorEstatistico.EstruturaEstatistica> ncmi; // Numero de colisoes por quadro na estacao i
+  
+  private ArrayList<String> mensagens = new ArrayList<String>();    // lista de logs a serem impressos na tela.
  
+  /*
+   * Retorna a instancia da Classe Acumulador Estatistico
+   */
   public static AcumuladorEstatistico getInstancia()
   {
     if(instancia == null)
       instancia = new AcumuladorEstatistico();
     return instancia;
   }
-   
+  
+  /*
+   * Construtor da Classe: Responsavel por inicial o Acumulador Estatistico, inicializando o tapi, tami e ncmi
+   */
   public AcumuladorEstatistico()
   {
     tapi = new HashMap<Integer, EstruturaEstatistica>();
@@ -30,6 +38,9 @@ public class AcumuladorEstatistico
     ncmi = new HashMap<Integer, EstruturaEstatistica>();
   }
   
+  /*
+   * Metodo que adiciona uma nova estacao nas estatisticas
+   */
   public void addEstacao(int codigoEstacao)
   {
     tapi.put(codigoEstacao, new EstruturaEstatistica());
@@ -37,6 +48,9 @@ public class AcumuladorEstatistico
     ncmi.put(codigoEstacao, new EstruturaEstatistica());
   }
   
+  /*
+   * Metodo que chama o metodo interno fimRodada de cada Estacao 
+   */
   public void fimRodada()
   {
      for (int codigoEstacao : tapi.keySet())
@@ -79,6 +93,9 @@ public class AcumuladorEstatistico
   }
 */
   
+  /*
+   * Metodo que recolhe as estatisticas de cada Estacao
+   */
   public void extraiEstatistica(List<Estacao> listaEstacoes, double tempoSimulacao)
   {
     Double utilizacao = 0.0;
@@ -117,23 +134,32 @@ public class AcumuladorEstatistico
     
   }
   
+  /*
+   * Metodo que adiciona uma nova amostra Tap
+   */
   public void novaAmostraTap(double amostra, int codigoEstacao)
   {
     EstruturaEstatistica estrutura = tapi.get(codigoEstacao);
     estrutura.novaAmostra(amostra);
   }
   
+  /*
+   * Metodo que adiciona uma nova amostra Tam
+   */
   public void novaAmostraTam(double amostra, int codigoEstacao)
   {
     EstruturaEstatistica estrutura = tami.get(codigoEstacao);
     estrutura.novaAmostra(amostra);    
   }
   
+  /*
+   * Metodo que adiciona uma nova amostra Ncm
+   */
   public void novaAmostraNcm(double amostra, int codigoEstacao)
   {
     EstruturaEstatistica estrutura = ncmi.get(codigoEstacao);
     estrutura.novaAmostra(amostra);    
-  }  
+  }
   
   public ArrayList<String> getMensagens()
   {
@@ -150,6 +176,10 @@ public class AcumuladorEstatistico
     this.mensagens.clear();
   }
 
+  
+  /*
+   * SubClasse Interna: Define a estrutura das estatisticas
+   */
   private class EstruturaEstatistica
   {
     //ArrayList<Double> valorPorRodada;
@@ -160,6 +190,9 @@ public class AcumuladorEstatistico
     double acumuladorRodada;
     int numeroAmostrasRodada;
     
+    /*
+     *Construtor da Classe Interna: Nesta classe sera calculada a variancia
+     */
     public EstruturaEstatistica() {
       //valorPorRodada = new ArrayList<Double>();
       
@@ -170,12 +203,18 @@ public class AcumuladorEstatistico
       numeroAmostrasRodada = 0;
     }
     
+    /*
+     * Metodo que adiciona uma nova amostra
+     */
     public void novaAmostra(Double amostra)
     {
       numeroAmostrasRodada++;
       acumuladorRodada += amostra;
     }
     
+    /*
+     * Metodo que finaliza uma rodada calculando a variancia
+     */
     public void fimRodada()
     {
       if (numeroAmostrasRodada > 0)
