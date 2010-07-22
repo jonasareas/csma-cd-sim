@@ -1,17 +1,27 @@
-package br.ufrj.ad.controller.variaveis;
+package br.ufrj.ad.util.variaveis;
 
-import static java.lang.Math.log;
 import br.ufrj.ad.util.MyRandom;
 
 public class Geometrica
 {
 
+  /*
+   * Metodo responsavel por gerar a Amostra Geometrica utilizando acumulador de probabilidades
+   */
   public static int geraAmostraGeometrica(double p)
   {
-    int numeroGerado = (int) ((log(MyRandom.rand()) / log(1 - p)) + 0.5);
-    while (numeroGerado == 0) {
-      numeroGerado = (int) ((log(MyRandom.rand()) / log(1 - p)) + 0.5);
+    int numeroGerado = 1;
+    double d = p;
+    double acumuladorPotencias = 1;
+    double u = MyRandom.rand();
+    
+    while(d < u)
+    {
+      numeroGerado++;
+      acumuladorPotencias *= 1-p; 
+      d += acumuladorPotencias*p;
     }
+    
     return numeroGerado;
   }
 
