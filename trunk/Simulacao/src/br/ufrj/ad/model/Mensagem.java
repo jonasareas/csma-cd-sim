@@ -78,10 +78,11 @@ public class Mensagem
    */
   public boolean fimServicoMensagem()
   {
+      this.totalColisoes += quadro.getNumeroColisoes();
+    
     if (this.quantidadeQuadros > 0)
     {
       this.quantidadeQuadros--;
-      this.totalColisoes += quadro.getNumeroColisoes();
       quadro = new Quadro();
       return false;
     }
