@@ -10,20 +10,28 @@ import br.ufrj.ad.model.Evento;
 import br.ufrj.ad.model.Mensagem;
 import br.ufrj.ad.model.Quadro;
 import br.ufrj.ad.model.Evento.TipoEvento;
-import br.ufrj.ad.parametros.ParametroA;
-import br.ufrj.ad.parametros.ParametroP;
 import br.ufrj.ad.util.BinaryBackoff;
+import br.ufrj.ad.util.parametros.ParametroA;
+import br.ufrj.ad.util.parametros.ParametroP;
 
 public class Simulador
 {
+  // Constantes
   private static final double   PROPAGACAO_ELETRICA      = 0.000005;    // Em milisegundos/metro
+  
   private static final double   TEMPO_ENTRE_TRANSMISSOES = 0.0096;      // Em milisegundos
+  
   private static final double   TEMPO_REFORCO_COLISAO    = 0.0032;      // Em milisegundos
+  
   private static final double   TEMPO_ENVIO_DE_UM_BYTE   = 0.0008;      // Em milisegundos
+  
   private static final int      TAMANHO_QUADRO           = 1000;        // Em bytes
 
+  // Variaveis
   private PriorityQueue<Evento> listaEventos;
+  
   private List<Estacao>         listaEstacoes;
+  
   private AcumuladorEstatistico acumulador;
   
   private int codigoRodada;
@@ -132,37 +140,37 @@ public class Simulador
     switch (evento.getTipoEvento())
     {
       case CHEGADA_NA_FILA:
-        System.out.print(Double.toString(evento.getTempoExecucao()) + ": Chegada na fila de " + evento.getCodigoEstacao()); // TODO 
+        // System.out.print(Double.toString(evento.getTempoExecucao()) + ": Chegada na fila de " + evento.getCodigoEstacao()); // TODO 
         processaChegadaNaFila(evento);
         break;
       case TENTATIVA_ENVIO:
-        System.out.println(Double.toString(evento.getTempoExecucao()) + ": Tentativa de envio de " + evento.getCodigoEstacao()); // TODO 
+     // System.out.println(Double.toString(evento.getTempoExecucao()) + ": Tentativa de envio de " + evento.getCodigoEstacao()); // TODO 
         processaTentativaEnvio(evento);
         break;
       case FIM_TRANSMISSAO_QUADRO:
-        System.out.print(Double.toString(evento.getTempoExecucao()) + ": Fim de transmissao de um quadro de " + evento.getCodigoEstacao()); // TODO
+     // System.out.print(Double.toString(evento.getTempoExecucao()) + ": Fim de transmissao de um quadro de " + evento.getCodigoEstacao()); // TODO
         processaFimTransmissaoQuadro(evento);
         break;
       case FIM_ESPERA_TEMPO_DE_SEGURANCA:
-        if (!buscaEstacao(evento.getCodigoEstacao()).filaServicoVazia()){
-          System.out.println(Double.toString(evento.getTempoExecucao()) + ": Fim de espera de " + evento.getCodigoEstacao()); //TODO
-        }
+     // if (!buscaEstacao(evento.getCodigoEstacao()).filaServicoVazia()){
+     //  System.out.println(Double.toString(evento.getTempoExecucao()) + ": Fim de espera de " + evento.getCodigoEstacao()); //TODO
+     // }
         processaFimEsperaTempoSeguranca(evento);
         break;
       case MEIO_LIVRE:
-        System.out.println(evento.getTempoExecucao() + ": Percepcao de meio livre em " + evento.getCodigoEstacao()); //TODO
+     //  System.out.println(evento.getTempoExecucao() + ": Percepcao de meio livre em " + evento.getCodigoEstacao()); //TODO
         processaMeioLivre(evento);
         break;
       case MEIO_OCUPADO:
-        System.out.println(evento.getTempoExecucao() + ": Percepcao de meio ocupado em " + evento.getCodigoEstacao()); //TODO: Adicionar "causado por envio de <codigo>"
+     //   System.out.println(evento.getTempoExecucao() + ": Percepcao de meio ocupado em " + evento.getCodigoEstacao()); //TODO
         processaMeioOcupado(evento);
         break;
       case FIM_TRANSMISSAO_REFORCO_COLISAO:
-        System.out.println(evento.getTempoExecucao() + ": Fim de reforco de " + evento.getCodigoEstacao()); //TODO
+     //  System.out.println(evento.getTempoExecucao() + ": Fim de reforco de " + evento.getCodigoEstacao()); //TODO
         processaFimTransmissaoReforcoColisao(evento);
         break;
       case FIM_ESPERA_BACKOFF:
-        System.out.println(evento.getTempoExecucao() + ": Fim de backoff de " + evento.getCodigoEstacao()); //TODO
+     //  System.out.println(evento.getTempoExecucao() + ": Fim de backoff de " + evento.getCodigoEstacao()); //TODO
         processaFimEsperaBackOff(evento);
         break;
     }
@@ -191,9 +199,9 @@ public class Simulador
       listaEventos.add(novoEvento);
     }
     estacao.addMensagem(mensagem);
-    System.out.println(" - Chegou uma mensagem com " + quantidadeQuadros + " quadros. " +
-                       "Existe(m) " + buscaEstacao(evento.getCodigoEstacao()).getQuadrosNaFila() +  
-                       " quadro(s) na fila de " + evento.getCodigoEstacao()); //TODO
+ //  System.out.println(" - Chegou uma mensagem com " + quantidadeQuadros + " quadros. " +
+ //                 "Existe(m) " + buscaEstacao(evento.getCodigoEstacao()).getQuadrosNaFila() +  
+ //                   " quadro(s) na fila de " + evento.getCodigoEstacao()); //TODO
   }
 
   /*
@@ -213,8 +221,6 @@ public class Simulador
     Mensagem mensagem = estacao.getMensagemEmServico();
     Quadro quadro = mensagem.getQuadro();
     
-    if (estacao.getTempoInicioTentativa() == 0.0)
-      estacao.setTempoInicioTentativa(evento.getTempoExecucao());
     if (mensagem.getTempoConsideradaTransmissao() == 0.0)
       mensagem.setTempoConsideradaTransmissao(evento.getTempoExecucao());
     if (quadro.getTempoConsideradoTransmissao() == 0.0)
@@ -224,8 +230,10 @@ public class Simulador
     {
       if (!estacao.isEsperandoTempoSeguranca())
       {
+        estacao.setTempoInicioUtilizacao(evento.getTempoExecucao());
+        
         quadro.setInicioTransmissao(evento.getTempoExecucao());
-        System.out.println(Double.toString(evento.getTempoExecucao()) + ": Inicio de envio de " + evento.getCodigoEstacao()); //TODO
+     //    System.out.println(Double.toString(evento.getTempoExecucao()) + ": Inicio de envio de " + evento.getCodigoEstacao()); //TODO
 
         enviaInformacoes(evento, estacao, TipoEvento.MEIO_OCUPADO);
         estacao.setForcarEnvio(false);
@@ -244,7 +252,8 @@ public class Simulador
     {
       if (estacao.isForcarEnvio()) 
       {
-        System.out.println(Double.toString(evento.getTempoExecucao()) + ": Sentiu meio ocupado em " + evento.getCodigoEstacao() + " e vai forcar envio!"); //TODO        
+     //   System.out.println(Double.toString(evento.getTempoExecucao()) + ": Sentiu meio ocupado em " + evento.getCodigoEstacao() + " e vai forcar envio!"); //TODO        
+        quadro.setInicioTransmissao(evento.getTempoExecucao());
         enviaInformacoes(evento, estacao, TipoEvento.MEIO_OCUPADO);
         estacao.setForcarEnvio(false);
         estacao.setTransmitindo(true);
@@ -256,8 +265,7 @@ public class Simulador
       }
       else
       {
-        System.out.println(Double.toString(evento.getTempoExecucao()) + ": Sentiu meio ocupado em " + evento.getCodigoEstacao() + " mas nao vai forcar envio!"); //TODO
-        // TODO: O meio ta ocupado e nao tah pra forcar! Nao deveria programar uma nova tentativa envio?!
+     //    System.out.println(Double.toString(evento.getTempoExecucao()) + ": Sentiu meio ocupado em " + evento.getCodigoEstacao() + " mas nao vai forcar envio!"); //TODO
         return;
       }
     }
@@ -272,6 +280,8 @@ public class Simulador
   private void processaFimTransmissaoQuadro(Evento evento)
   {
     Estacao estacao = buscaEstacao(evento.getCodigoEstacao());
+    
+    estacao.computaUtilizacaoEthernet(evento.getTempoExecucao());
 
     enviaInformacoes(evento, estacao, TipoEvento.MEIO_LIVRE);
     estacao.setEsperandoTempoSeguranca(true);
@@ -284,7 +294,7 @@ public class Simulador
     double tempoFimEspera = evento.getTempoExecucao() + TEMPO_ENTRE_TRANSMISSOES;
     Evento fimEsperaTempoSeguranca = new Evento(TipoEvento.FIM_ESPERA_TEMPO_DE_SEGURANCA, tempoFimEspera, estacao.getCodigo());
     listaEventos.add(fimEsperaTempoSeguranca);
-    System.out.println(" - Existe(m) " + buscaEstacao(evento.getCodigoEstacao()).getQuadrosNaFila() +  " quadro(s) na fila de " + evento.getCodigoEstacao()); //TODO
+ //    System.out.println(" - Existe(m) " + buscaEstacao(evento.getCodigoEstacao()).getQuadrosNaFila() +  " quadro(s) na fila de " + evento.getCodigoEstacao()); //TODO
   }
 
   /*
@@ -309,12 +319,18 @@ public class Simulador
   /*
    * Este metodo trata o evento que indica a percepcao de meio livre para a estacao relacionada ao evento.
    * TODO NAO ENTENDI! =/
+   * Na verdade ela indica que os bits da transmissao de UMA das estacoes que estavam ocupando o meio terminou
    */
   private void processaMeioLivre(Evento evento)
   {
     Estacao estacao = buscaEstacao(evento.getCodigoEstacao());
 
     estacao.setMeioOcupado(estacao.getMeioOcupado() - 1);
+    
+    if(estacao.getMeioOcupado() == 0 && !estacao.isTransmitindo())
+    {
+      estacao.computaUtilizacaoEthernet(evento.getTempoExecucao());
+    }
 
     if (estacao.isTransmitindo())
       return;
@@ -344,21 +360,21 @@ public class Simulador
   private void processaMeioOcupado(Evento evento)
   {
     Estacao estacao = buscaEstacao(evento.getCodigoEstacao());
+    
+    if(estacao.getMeioOcupado() == 0 && !estacao.isTransmitindo())
+      estacao.setTempoInicioUtilizacao(evento.getTempoExecucao());
 
     estacao.setMeioOcupado(estacao.getMeioOcupado() + 1);
 
-    if (!estacao.isTransmitindo() || estacao.isMeioEmColisao())
-      return;
-
-    listaEventos.remove(new Evento(TipoEvento.FIM_TRANSMISSAO_QUADRO, 0, estacao.getCodigo()));
-
-    //TODO: Nao entendo! Soh chega aqui se estiver transmitindo e o meio NAO estiver em colisao!! =X
-    // TODO: Nao seria mais facil ter uma var que controle se eu estou RECEBENDO (alem da que controla transmissao?)
-    estacao.setMeioEmColisao(true);
-
-    Evento fimReforco = new Evento(TipoEvento.FIM_TRANSMISSAO_REFORCO_COLISAO, evento.getTempoExecucao() + TEMPO_REFORCO_COLISAO, estacao.getCodigo());
-    listaEventos.add(fimReforco);
-
+    if (estacao.isTransmitindo() && !estacao.isMeioEmColisao())
+    {
+      estacao.setMeioEmColisao(true);
+      
+      listaEventos.remove(new Evento(TipoEvento.FIM_TRANSMISSAO_QUADRO, 0, estacao.getCodigo()));      
+  
+      Evento fimReforco = new Evento(TipoEvento.FIM_TRANSMISSAO_REFORCO_COLISAO, evento.getTempoExecucao() + TEMPO_REFORCO_COLISAO, estacao.getCodigo());
+      listaEventos.add(fimReforco);
+      }
   }
 
   /*
@@ -369,6 +385,11 @@ public class Simulador
   private void processaFimTransmissaoReforcoColisao(Evento evento)
   {
     Estacao estacao = buscaEstacao(evento.getCodigoEstacao());
+    
+    if(estacao.getMeioOcupado() == 0)
+    {
+      estacao.computaUtilizacaoEthernet(evento.getTempoExecucao());
+    }
     
     enviaInformacoes(evento, estacao, TipoEvento.MEIO_LIVRE);
     estacao.setEsperandoTempoSeguranca(false);
@@ -381,7 +402,7 @@ public class Simulador
     double tempoEsperaBackoff = BinaryBackoff.geraAtraso(estacao.getMensagemEmServico().getQuadro().getNumeroColisoes());
 
     if (tempoEsperaBackoff < 0)
-      estacao.descartaPacote(evento.getTempoExecucao(), codigoRodada);
+      estacao.descartaQuadro(evento.getTempoExecucao(), codigoRodada);
     else
     {
       estacao.setEsperandoBackoff(true);
