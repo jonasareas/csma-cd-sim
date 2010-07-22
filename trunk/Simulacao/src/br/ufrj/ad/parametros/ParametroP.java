@@ -4,7 +4,12 @@ import br.ufrj.ad.controller.variaveis.Geometrica;
 
 public class ParametroP
 {
-
+  
+  /*
+   * Metodo responsavel por gerar o Parametro da distribuicao da quantidade de quadros de uma mensagem.
+   * Se o parametro p for maior ou igual a 1 entao a distribuicao sera o proprio p,
+   * caso contrario sera gerada uma amostra geomatrica.
+   */
   public static int geraParametro(double p)
   {
     if (p >= 1.0)
