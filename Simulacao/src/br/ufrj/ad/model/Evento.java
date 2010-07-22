@@ -3,6 +3,9 @@ package br.ufrj.ad.model;
 public class Evento implements Comparable<Evento>
 {
   
+  /*
+   * Enumerado sobre o tipo de Evento a ser processado
+   */
   public static enum TipoEvento 
   {
     CHEGADA_NA_FILA, 
@@ -15,10 +18,15 @@ public class Evento implements Comparable<Evento>
     FIM_ESPERA_BACKOFF
   }  
   
-  private double tempoExecucao;
-  private TipoEvento tipoEvento;
-  private int codigoEstacao;
+  private double tempoExecucao;     // Tempo de execucao de um evento
   
+  private TipoEvento tipoEvento;    // Tipo de evento a ser processado
+  
+  private int codigoEstacao;        // Codigo da estacao a qual o evento pertence
+  
+  /*
+   * Construtor da Classe: Define o Evento com o seu Tipo, tempo de execucao e de qual estacao ele pertence
+   */
   public Evento(TipoEvento tipoEvento, double tempoExecucao, int codigoEstacao) {
     this.tipoEvento = tipoEvento;
     this.tempoExecucao = tempoExecucao;
@@ -55,6 +63,9 @@ public class Evento implements Comparable<Evento>
     this.codigoEstacao = codigoEstacao;
   }
 
+  /*
+   * Metodo utilzado para ordenar a estrutura do Evento atraves de seu tempo de Execucao
+   */
   public int compareTo(Evento e)
   {
 	if (this.tempoExecucao < e.getTempoExecucao())
@@ -64,6 +75,9 @@ public class Evento implements Comparable<Evento>
     return 0;
   }
   
+  /*
+   * Metodo responsavel por encontrar o evento na lista e remove-lo
+   */
   @Override 
   public boolean equals(Object obj)
   {

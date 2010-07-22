@@ -3,10 +3,15 @@ package br.ufrj.ad.model;
 public class Quadro
 {
 
-  private double tempoConsideradoTransmissao;
-  private double tempoInicioTransmissao;
-  private int    numeroColisoes;
-
+  private double tempoConsideradoTransmissao;       // Tempo inicial do Quadro para o Tap(i)
+  
+  private double tempoInicioTransmissao;            // Tempo inicial de transmissao de um Quadro
+  
+  private int    numeroColisoes;                    // Numero de colisoes de um Quadro
+  
+  /*
+   * Construtor da Classe: Responsavel por inicializar um Quadro com seus tempos iniciais de transmissao iguais a zero.
+   */
   public Quadro()
   {
     this.tempoConsideradoTransmissao = 0.0;

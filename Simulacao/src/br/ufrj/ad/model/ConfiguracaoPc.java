@@ -2,12 +2,19 @@ package br.ufrj.ad.model;
 
 public class ConfiguracaoPc
 {
-  private int     codigo;
-  private double  distancia;
-  private double  a;
-  private double  p;
-  private boolean deterministico;
+  private int     codigo;           // Codigo da Estacao
+  
+  private double  distancia;        // Distancia ao Hub
+  
+  private double  a;                // Parametro A (Tempo medio entre chegadas de mensagens)
+  
+  private double  p;                // Parametro P (Distribuicao da quantidade de quadros de uma mensagem)
+  
+  private boolean deterministico;   // Determina se o tempo entre chegadas eh deterministico ou exponencialmente distribuido
 
+  /*
+   * Construtor da Classe: Responsavel por inicializar uma configuracao de uma estacao
+   */
   public ConfiguracaoPc(int codigo, double distancia, double p, double a, boolean deterministico)
   {
     this.codigo = codigo;
