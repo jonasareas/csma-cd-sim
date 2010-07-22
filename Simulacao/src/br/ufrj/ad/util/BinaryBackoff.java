@@ -2,11 +2,13 @@ package br.ufrj.ad.util;
 
 public class BinaryBackoff
 {
-  private static final double SLOT_TEMPO        = 0.0512; // em milisegundos
+  private static final double SLOT_TEMPO        = 0.0512; // em milessegundos
   private static final int    COLISOES_MAXIMO   = 10;
   private static final int    COLISOES_DESCARTE = 16;
 
-  // Em milisegundos
+  /*
+   * Metodo responsavel por gerar o Atraso em milessegundos atraves do algoritmo de BinaryBackoff
+   */
   public static double geraAtraso(int numeroColisoes)
   {
     if (numeroColisoes > COLISOES_DESCARTE)
