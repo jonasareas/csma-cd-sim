@@ -215,7 +215,7 @@ public class Estacao
   /*
    * Processa a finalizacao de um quadro como Enviado.
    */
-  public void quadroEnviado(double tempoFimServico, int codigoRodada)
+  public void enviaQuadro(double tempoFimServico, int codigoRodada)
   {
     AcumuladorEstatistico acumulador = AcumuladorEstatistico.getInstancia();
     
