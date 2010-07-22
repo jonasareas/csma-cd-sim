@@ -7,7 +7,7 @@ public class BinaryBackoff
   private static final int    COLISOES_DESCARTE = 16;
 
   /*
-   * Metodo responsavel por gerar o Atraso em milessegundos atraves do algoritmo de BinaryBackoff
+   * Metodo responsavel por gerar o atraso em milessegundos atraves do algoritmo de BinaryBackoff
    */
   public static double geraAtraso(int numeroColisoes)
   {

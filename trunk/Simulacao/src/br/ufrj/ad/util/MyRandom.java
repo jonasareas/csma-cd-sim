@@ -28,7 +28,7 @@ public class MyRandom {
     }
 	
     /*
-     * Metodo que o retorna o proximo numero aleatorio
+     * Metodo que o retorna o proximo numero pseudo-aleatorio
      */
 	public static double rand()
 	{

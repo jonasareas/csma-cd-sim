@@ -177,7 +177,7 @@ public class Estacao
   }
   
   /*
-   * Adiciona uma mensagem na estacao
+   * Adiciona uma mensagem na fila da estacao
    */
   public void addMensagem(Mensagem mensagem)
   {
@@ -273,12 +273,12 @@ public class Estacao
     
     for (Mensagem msg : filaMensagens)
     {
-      total += msg.getQuantidadeQuadros() + 1; // Total de quadros eh a quantidade de quadros que a 
-                                             // que a mensagem recebeu para enviar. O "+1" eh pq o 
-                                             // valor quantidade de quadros, eh a quantidade de
-                                             // quantidade de quadros restantes menos 1 que eh o 
-                                             // quadro que esta na classe Quadro (proximo quadro
-                                             // da mensagem)
+      total += msg.getQuantidadeQuadros() + 1; /* Total de quadros eh a quantidade de quadros que a 
+                                                  que a mensagem recebeu para enviar. O "+1" eh pq o 
+                                                  valor quantidade de quadros, eh a quantidade de
+                                                  quantidade de quadros restantes menos 1 que eh o 
+                                                  quadro que esta na classe Quadro (proximo quadro
+                                                  da mensagem) */
     }
     
     return total;

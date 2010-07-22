@@ -71,11 +71,10 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
   private JCheckBox jCheck4;
   private JButton jButtonCenarioGenerico;  
   
-  private JPanel jPanelGrafico;
+  private JPanel jPanelLog;
   private JLabel jLabelLog;
-  private JScrollPane scrollTextArea;
-  
-  public JTextArea jTextAreaEstatisticas;  
+  private JScrollPane scrollTextLog;  
+  private JTextArea jTextAreaLog;  
   
   private boolean check1 = false;
   private boolean check2 = false;
@@ -124,7 +123,6 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jTextTempoSimulacao.setBounds(500, 15, 200, 25);
 
     jPanelCenarios.add(jLabelTempoSimulacao);
-    // jPanelCenarios.add(jTextTempoSimulacao);
     
     jPanelCenarios.add(getJPanelCenariosFixos());
     jPanelCenarios.add(getJPanelCenarioGenerico());  
@@ -136,25 +134,25 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
   
   private JPanel getJPanelGrafico() 
   {
-	jPanelGrafico = new JPanel();
-	jPanelGrafico.setLayout(null);
-	jPanelGrafico.setBounds(50, 320, 700, 180);
-	jPanelGrafico.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
+	jPanelLog = new JPanel();
+	jPanelLog.setLayout(null);
+	jPanelLog.setBounds(50, 320, 700, 180);
+	jPanelLog.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 	
 	jLabelLog = new JLabel();
 	jLabelLog.setText("Estatisticas da simulacao:");
 	jLabelLog.setFont(new java.awt.Font("Dialog",1,18));
 	jLabelLog.setBounds(250, 10, 250, 25);
-	jPanelGrafico.add(jLabelLog);
+	jPanelLog.add(jLabelLog);
 	
-	jTextAreaEstatisticas = new JTextArea();
-	scrollTextArea = new JScrollPane(jTextAreaEstatisticas);
-	scrollTextArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-	scrollTextArea.setBounds(20,40,660,120);
+	jTextAreaLog = new JTextArea();
+	scrollTextLog = new JScrollPane(jTextAreaLog);
+	scrollTextLog.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+	scrollTextLog.setBounds(20,40,660,120);
 	
-	jPanelGrafico.add(scrollTextArea);
+	jPanelLog.add(scrollTextLog);
 	
-    return jPanelGrafico;
+    return jPanelLog;
   }
   
   private JPanel getJPanelCenariosFixos() 
@@ -323,8 +321,8 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     Simulador simulador = new Simulador();
     double tempoSimulacao = TEMPO_RODADA_EM_SEGUNDOS * 1000; // Passando para milisegundos.
     
-    jTextAreaEstatisticas.append("[LOG] NUMERO DE RODADAS:" + NUMERO_RODADAS + "\n");    
-    jTextAreaEstatisticas.append("[LOG] TEMPO DE CADA RODADA:" + TEMPO_RODADA_EM_SEGUNDOS + " segundos\n");
+    jTextAreaLog.append("[LOG] NUMERO DE RODADAS:" + NUMERO_RODADAS + "\n");    
+    jTextAreaLog.append("[LOG] TEMPO DE CADA RODADA:" + TEMPO_RODADA_EM_SEGUNDOS + " segundos\n");
   
     ArrayList<ConfiguracaoPc> parametros = new ArrayList<ConfiguracaoPc>();
     parametros.add(config1);
@@ -337,12 +335,12 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
       simulador.iniciaSimulacao(tempoSimulacao, NUMERO_RODADAS, parametros, CODIGO_ESTACAO_ANALISE_UTILIZACAO); 
       for (String mensagem : AcumuladorEstatistico.getInstancia().getMensagens())
       {
-        jTextAreaEstatisticas.append(mensagem);
+        jTextAreaLog.append(mensagem);
       }
     }
     else
     {
-      jTextAreaEstatisticas.append("FALTAM PARAMETROS PARA SIMULACAO!\n");
+      jTextAreaLog.append("FALTAM PARAMETROS PARA SIMULACAO!\n");
     }
     AcumuladorEstatistico.getInstancia().clearMensagens();
     
@@ -404,7 +402,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     ConfiguracaoPc config3 = null;
     ConfiguracaoPc config4 = null;
     
-    jTextAreaEstatisticas.setText("");
+    jTextAreaLog.setText("");
     
     if (e.getSource().equals(jButtonCenario1)) {
       config1 = new ConfiguracaoPc(1, 100, 40, 80, true);
@@ -441,7 +439,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     
   	configuraSimulacao(config1, config2, config3, config4);
   	
-    jTextAreaEstatisticas.select(0, 0);
+    jTextAreaLog.select(0, 0);
   }
   
   private double trataDouble(String texto)
@@ -454,7 +452,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
       try {
         retorno = Double.parseDouble(texto);
       } catch (NumberFormatException e) {
-        jTextAreaEstatisticas.append("ERRO NA LEITURA DOS PARAMETROS PARA SIMULACAO\n");
+        jTextAreaLog.append("ERRO NA LEITURA DOS PARAMETROS PARA SIMULACAO\n");
         return 0;
       }
       return retorno;
