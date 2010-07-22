@@ -17,7 +17,7 @@ import br.ufrj.ad.util.BinaryBackoff;
 public class Simulador
 {
   // Constantes
-  private static final double   PROPAGACAO_ELETRICA      = 0.000005;    // Em milisegundos/metro
+  private static final double   PROPAGACAO_ELETRICA      = 0.000005;    // Em milessegundos/metro
   
   private static final double   TEMPO_ENTRE_TRANSMISSOES = 0.0096;      // Em milessegundos
   
