@@ -1,6 +1,6 @@
 package br.ufrj.ad.parametros;
 
-import br.ufrj.ad.util.variaveis.Geometrica;
+import br.ufrj.ad.controller.variaveis.Geometrica;
 
 public class ParametroP
 {
