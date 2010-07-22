@@ -106,7 +106,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jContentPane.add(jPanelTitulo);
     
     jLabelTitulo = new JLabel();
-    jLabelTitulo.setText("Trabalho de Avaliação e Desempenho - Simulador CSMA/CD");
+    jLabelTitulo.setText("Trabalho de Avaliacao e Desempenho - Simulador CSMA/CD");
     jLabelTitulo.setFont(new java.awt.Font("Dialog",3,24));
     jPanelTitulo.add(jLabelTitulo);
 
@@ -165,7 +165,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jPanelCenariosFixos.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
     
     jLabelCenariosFixos = new JLabel();
-    jLabelCenariosFixos.setText("Simular cenário pré-definido:");
+    jLabelCenariosFixos.setText("Simular cenario pre-definido:");
     jLabelCenariosFixos.setFont(new java.awt.Font("Arial",1,14));
     jLabelCenariosFixos.setBounds(60, 10, 220, 30);
     jPanelCenariosFixos.add(jLabelCenariosFixos);    
@@ -173,28 +173,28 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jButtonCenario1 = new JButton();
     jButtonCenario1.setBounds(100, 50, 125, 25);
     jButtonCenario1.setEnabled(true);
-    jButtonCenario1.setText("Cenário 1");
+    jButtonCenario1.setText("Cenario 1");
     jButtonCenario1.addActionListener(this);
     jPanelCenariosFixos.add(jButtonCenario1);
     
     jButtonCenario2 = new JButton();
     jButtonCenario2.setBounds(100, 95, 125, 25);
     jButtonCenario2.setEnabled(true);
-    jButtonCenario2.setText("Cenário 2");
+    jButtonCenario2.setText("Cenario 2");
     jButtonCenario2.addActionListener(this);
     jPanelCenariosFixos.add(jButtonCenario2);
           
     jButtonCenario3 = new JButton();
     jButtonCenario3.setBounds(100, 140, 125, 25);
     jButtonCenario3.setEnabled(true);
-    jButtonCenario3.setText("Cenário 3");
+    jButtonCenario3.setText("Cenario 3");
     jButtonCenario3.addActionListener(this);    
     jPanelCenariosFixos.add(jButtonCenario3);
           
     jButtonCenario4 = new JButton();
     jButtonCenario4.setBounds(100, 185, 125, 25);
     jButtonCenario4.setEnabled(true);
-    jButtonCenario4.setText("Cenário 4");
+    jButtonCenario4.setText("Cenario 4");
     jButtonCenario4.addActionListener(this);     
     jPanelCenariosFixos.add(jButtonCenario4);   
     
@@ -209,7 +209,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jPanelCenarioGenerico.setBounds(425, 50, 325, 250);    
     
     jLabelCenarioGenerico = new JLabel();
-    jLabelCenarioGenerico.setText("Simular cenário genérico:");
+    jLabelCenarioGenerico.setText("Simular cenario generico:");
     jLabelCenarioGenerico.setFont(new java.awt.Font("Arial",1,14));
     jLabelCenarioGenerico.setBounds(70, 10, 250, 30);
     jPanelCenarioGenerico.add(jLabelCenarioGenerico);      
@@ -227,13 +227,13 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jPanelCenarioGenerico.add(jLabelParametroA);  
     
     jLabelParametroDeterministico = new JLabel();
-    jLabelParametroDeterministico.setText("A Determinístico?");
+    jLabelParametroDeterministico.setText("A Deterministico?");
     jLabelParametroDeterministico.setFont(new java.awt.Font("Arial",1,11));
     jLabelParametroDeterministico.setBounds(210, 40, 100, 20);
     jPanelCenarioGenerico.add(jLabelParametroDeterministico);    
     
     jLabelPC1 = new JLabel();
-    jLabelPC1.setText("Estação 1");
+    jLabelPC1.setText("Estacao 1");
     jLabelPC1.setFont(new java.awt.Font("Arial",1,11));
     jLabelPC1.setBounds(10, 70, 80, 20);
     jPanelCenarioGenerico.add(jLabelPC1);  
@@ -252,7 +252,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jPanelCenarioGenerico.add(jCheck1);
     
     jLabelPC2 = new JLabel();
-    jLabelPC2.setText("Estação 2");
+    jLabelPC2.setText("Estacao 2");
     jLabelPC2.setFont(new java.awt.Font("Arial",1,11));
     jLabelPC2.setBounds(10, 100, 80, 20);
     jPanelCenarioGenerico.add(jLabelPC2);  
@@ -271,7 +271,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jPanelCenarioGenerico.add(jCheck2);    
     
     jLabelPC3 = new JLabel();
-    jLabelPC3.setText("Estação 3");
+    jLabelPC3.setText("Estacao 3");
     jLabelPC3.setFont(new java.awt.Font("Arial",1,11));
     jLabelPC3.setBounds(10, 130, 80, 20);
     jPanelCenarioGenerico.add(jLabelPC3);  
@@ -290,7 +290,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jPanelCenarioGenerico.add(jCheck3);    
     
     jLabelPC4 = new JLabel();
-    jLabelPC4.setText("Estação 4");
+    jLabelPC4.setText("Estacao 4");
     jLabelPC4.setFont(new java.awt.Font("Arial",1,11));
     jLabelPC4.setBounds(10, 160, 80, 20);
     jPanelCenarioGenerico.add(jLabelPC4);   
@@ -311,7 +311,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     jButtonCenarioGenerico = new JButton();
     jButtonCenarioGenerico.setBounds(65, 200, 200, 25);
     jButtonCenarioGenerico.setEnabled(true);
-    jButtonCenarioGenerico.setText("Simular Cenário");
+    jButtonCenarioGenerico.setText("Simular Cenario");
     jButtonCenarioGenerico.addActionListener(this);     
     jPanelCenarioGenerico.add(jButtonCenarioGenerico);   
     
@@ -342,7 +342,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     }
     else
     {
-      jTextAreaEstatisticas.append("FALTAM PARMETROS PARA SIMULACAO!\n");
+      jTextAreaEstatisticas.append("FALTAM PARAMETROS PARA SIMULACAO!\n");
     }
     AcumuladorEstatistico.getInstancia().clearMensagens();
     
