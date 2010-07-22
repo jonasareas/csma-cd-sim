@@ -61,40 +61,8 @@ public class AcumuladorEstatistico
      }
   }
  
-/*
-  private double variancia(ArrayList<Double> list)
-  {
-    if(list.size() <= 1)
-      return -1;
-    
-    double med = media(list);
-    double sum = 0.0;
-    for(Double d : list)
-    {
-      sum += (d - med)*(d - med); 
-    }
-    
-    return sum/(list.size()-1);
-  }
-*/
-
-/*
-  private double media(ArrayList<Double> list)
-  {
-    if(list.size() <= 0 )
-      return -1;
-    
-    double sum = 0.0;
-    for(Double d: list)
-    {
-      sum += d;
-    }
-    return sum/list.size();
-  }
-*/
-  
   /*
-   * Metodo que recolhe as estatisticas de cada Estacao
+   * Metodo que recolhe as estatisticas de cada Estacao e adiciona na estrutura que será escrita na tela.
    */
   public void extraiEstatistica(List<Estacao> listaEstacoes, double tempoSimulacao)
   {
@@ -102,33 +70,17 @@ public class AcumuladorEstatistico
     
     for (Estacao estacao : listaEstacoes)
     {
-      //mensagens.add("\nESTATISTICAS DA ESTACAO " + estacao.getCodigo() + "\n");
-      /*
+      mensagens.add("\nESTATISTICAS DA ESTACAO " + estacao.getCodigo() + "\n");
+      
       mensagens.add("E[TAp] da estacao " + estacao.getCodigo() + " = " + tapi.get(estacao.getCodigo()).getMedia() + "\n");
       mensagens.add("E[TAm] da estacao " + estacao.getCodigo() + " = " + tami.get(estacao.getCodigo()).getMedia() + "\n");
       mensagens.add("E[NCm] da estacao " + estacao.getCodigo() + " = " + ncmi.get(estacao.getCodigo()).getMedia() + "\n");
       mensagens.add("Vazao da estacao " + estacao.getCodigo() + " = " + estacao.getQuadrosTransmitidos()/tempoSimulacao + "\n");
-      */
-      mensagens.add(tapi.get(estacao.getCodigo()).getMedia() + "\n");
-      mensagens.add(tami.get(estacao.getCodigo()).getMedia() + "\n");
-      mensagens.add(ncmi.get(estacao.getCodigo()).getMedia() + "\n");
+
       if (estacao.isAnaliseUtilizacaoEthernet())
         utilizacao = estacao.getTempoUtilizacaoEthernet()/tempoSimulacao;
-      /*
-      System.out.println("VAR(Tap) da estacao " + estacao.getCodigo() + " = " + tapi.get(estacao.getCodigo()).getVariancia() + "\n");
-      System.out.println("VAR(Tam) da estacao " + estacao.getCodigo() + " = " + tami.get(estacao.getCodigo()).getVariancia() + "\n");
-      System.out.println("VAR(Ncm) da estacao " + estacao.getCodigo() + " = " + ncmi.get(estacao.getCodigo()).getVariancia() + "\n");
-      */
-      System.out.println(tapi.get(estacao.getCodigo()).getVariancia());
-      System.out.println(tami.get(estacao.getCodigo()).getVariancia());
-      System.out.println(ncmi.get(estacao.getCodigo()).getVariancia());
       
     }
-    for (Estacao estacao : listaEstacoes)
-    {
-      mensagens.add("Vazao da estacao " + estacao.getCodigo() + " = " + estacao.getQuadrosTransmitidos()/tempoSimulacao + "\n");
-    }
-    
     mensagens.add("\nESTATISTICAS DA ETHERNET\n");
     mensagens.add("Utilizacao = " + utilizacao + " ( " + Math.floor((utilizacao * 100) * 10000)/10000  + " % do tempo total de simulacao)\n");
     
@@ -176,13 +128,12 @@ public class AcumuladorEstatistico
     this.mensagens.clear();
   }
 
-  
+  // --------------------------------------------------------------- x -----------------------------------------------------------------------
   /*
-   * SubClasse Interna: Define a estrutura das estatisticas
+   * Classe Interna: Define a estrutura das estatisticas
    */
   private class EstruturaEstatistica
   {
-    //ArrayList<Double> valorPorRodada;
     double acumuladorFinal;
     double acumuladorFinal2;
     int numeroRodadas;
@@ -191,11 +142,10 @@ public class AcumuladorEstatistico
     int numeroAmostrasRodada;
     
     /*
-     *Construtor da Classe Interna: Nesta classe sera calculada a variancia
+     * Construtor da Classe Interna: Nesta classe serao calculados os valores de cada uma das grandezas
      */
-    public EstruturaEstatistica() {
-      //valorPorRodada = new ArrayList<Double>();
-      
+    public EstruturaEstatistica() 
+    {
       acumuladorFinal = 0.0;
       acumuladorFinal2 = 0.0;
       numeroRodadas = 0;
@@ -204,7 +154,7 @@ public class AcumuladorEstatistico
     }
     
     /*
-     * Metodo que adiciona uma nova amostra
+     * Metodo que adiciona uma nova amostra ao valor já acumulado
      */
     public void novaAmostra(Double amostra)
     {
@@ -213,13 +163,12 @@ public class AcumuladorEstatistico
     }
     
     /*
-     * Metodo que finaliza uma rodada calculando a variancia
+     * Metodo que finaliza uma rodada fazendo os devidos calculos
      */
     public void fimRodada()
     {
       if (numeroAmostrasRodada > 0)
       {
-        //valorPorRodada.add(acumuladorRodada/numeroAmostrasRodada);
         acumuladorFinal +=  acumuladorRodada/numeroAmostrasRodada;
         acumuladorFinal2 += (acumuladorRodada/numeroAmostrasRodada)*(acumuladorRodada/numeroAmostrasRodada);
         numeroRodadas++;
@@ -229,6 +178,9 @@ public class AcumuladorEstatistico
       }
     }
     
+    /*
+     * Metodo que retorna a media dos valores da grandeza acumulada
+     */    
     public double getMedia()
     {
       if(numeroRodadas>0)
@@ -237,7 +189,10 @@ public class AcumuladorEstatistico
         return -1;
     }
     
-///*
+    /*
+     * Metodo que retorna a variancia dos valores da grandeza acumulada. Foi utilizado apenas para obtencao do intervalo de confianca.
+     */    
+    @SuppressWarnings("unused")
     public double getVariancia()
     {
       if(numeroRodadas > 1)
@@ -246,13 +201,5 @@ public class AcumuladorEstatistico
       }else
         return -1;
     }
-//*/
-    
-/*
-    public ArrayList<Double> getValorPorRodada()
-    {
-      return valorPorRodada;
-    }
- */
   }
 }
