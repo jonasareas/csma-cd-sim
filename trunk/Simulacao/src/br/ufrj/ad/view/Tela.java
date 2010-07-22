@@ -27,9 +27,11 @@ import br.ufrj.ad.model.ConfiguracaoPc;
 
 public class Tela extends JFrame implements WindowListener,ActionListener,ItemListener
 {
+  private static final long serialVersionUID = 1L;
+  
   private static final int CODIGO_ESTACAO_ANALISE_UTILIZACAO = 1;
-  private static final int NUMERO_RODADAS = 30;
-  private static final double TEMPO_RODADA_EM_SEGUNDOS = 1;
+  private static final int NUMERO_RODADAS = 50;
+  private static final double TEMPO_RODADA_EM_SEGUNDOS = 300;
   
   private JPanel jContentPane;
   private JLabel jLabelTitulo;
@@ -322,7 +324,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     double tempoSimulacao = TEMPO_RODADA_EM_SEGUNDOS * 1000; // Passando para milisegundos.
     
     jTextAreaEstatisticas.append("[LOG] NUMERO DE RODADAS:" + NUMERO_RODADAS + "\n");    
-    jTextAreaEstatisticas.append("[LOG] TEMPO DE DE CADA RODADA:" + TEMPO_RODADA_EM_SEGUNDOS + " segundos\n");
+    jTextAreaEstatisticas.append("[LOG] TEMPO DE CADA RODADA:" + TEMPO_RODADA_EM_SEGUNDOS + " segundos\n");
   
     ArrayList<ConfiguracaoPc> parametros = new ArrayList<ConfiguracaoPc>();
     parametros.add(config1);
@@ -342,6 +344,8 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     {
       jTextAreaEstatisticas.append("FALTAM PARMETROS PARA SIMULACAO!\n");
     }
+    AcumuladorEstatistico.getInstancia().clearMensagens();
+    
   }
   
   private boolean validaParametros(ConfiguracaoPc config)
@@ -436,6 +440,7 @@ public class Tela extends JFrame implements WindowListener,ActionListener,ItemLi
     } 
     
   	configuraSimulacao(config1, config2, config3, config4);
+  	
     jTextAreaEstatisticas.select(0, 0);
   }
   
