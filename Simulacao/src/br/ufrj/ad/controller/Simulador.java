@@ -289,7 +289,7 @@ public class Simulador
     estacao.setForcarEnvio(false);
     estacao.setMeioEmColisao(false);
 
-    estacao.quadroEnviado(evento.getTempoExecucao(), codigoRodada);
+    estacao.enviaQuadro(evento.getTempoExecucao(), codigoRodada);
 
     double tempoFimEspera = evento.getTempoExecucao() + TEMPO_ENTRE_TRANSMISSOES;
     Evento fimEsperaTempoSeguranca = new Evento(TipoEvento.FIM_ESPERA_TEMPO_DE_SEGURANCA, tempoFimEspera, estacao.getCodigo());
