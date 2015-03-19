@@ -1,0 +1,1 @@
+Este projeto tem como objetivo analisar o desempenho de um enlace half-duplex utilizando csma/cd com dois hosts. Para isto,  criaremos um simulador para coletar os dados e gerar as estatísticas.
